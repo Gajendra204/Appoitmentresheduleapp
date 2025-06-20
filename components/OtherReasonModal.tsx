@@ -39,7 +39,7 @@ export const OtherReasonModal: React.FC<OtherReasonModalProps> = ({ visible, onC
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.label}>Write a reason for rescheduling</Text>
+          <Text style={styles.label}>Let the doctor know why you're cancelling</Text>
           <TextInput
             style={styles.textInput}
             value={reason}
@@ -47,7 +47,7 @@ export const OtherReasonModal: React.FC<OtherReasonModalProps> = ({ visible, onC
             placeholder="Power cut"
             placeholderTextColor={COLORS.text.disabled}
             multiline
-            numberOfLines={3}
+            numberOfLines={4}
             textAlignVertical="top"
           />
 
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     padding: SPACING.md,
     ...TYPOGRAPHY.body1,
     color: COLORS.text.primary,
-    minHeight: 80,
+    minHeight: 100,
     marginBottom: SPACING.lg,
   },
   actions: {

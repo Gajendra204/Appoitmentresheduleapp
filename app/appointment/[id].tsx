@@ -1,142 +1,148 @@
+"use client"
+
 import type React from "react"
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Image, Alert } from "react-native"
+import { useState } from "react"
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Image, Modal } from "react-native"
 import { useLocalSearchParams, router } from "expo-router"
 import { MaterialIcons } from "@expo/vector-icons"
 import { MOCK_APPOINTMENTS } from "../../constants/mockData"
-import { Button } from "../../components/Button"
 import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../../constants/theme"
 
-interface DetailRowProps {
-  label: string
-  value: string
-  icon?: keyof typeof MaterialIcons.glyphMap
-}
-
-const DetailRow: React.FC<DetailRowProps> = ({ label, value, icon }) => (
-  <View style={styles.detailRow}>
-    <View style={styles.detailLeft}>
-      {icon && <MaterialIcons name={icon} size={20} color={COLORS.text.secondary} />}
-      <Text style={styles.detailLabel}>{label}</Text>
-    </View>
-    <Text style={styles.detailValue}>{value}</Text>
-  </View>
-)
-
-interface SectionProps {
+interface MenuItemProps {
   title: string
-  children: React.ReactNode
+  onPress: () => void
+  showArrow?: boolean
 }
 
-const Section: React.FC<SectionProps> = ({ title, children }) => (
-  <View style={styles.section}>
-    <Text style={styles.sectionTitle}>{title}</Text>
-    <View style={styles.sectionContent}>{children}</View>
-  </View>
+const MenuItem: React.FC<MenuItemProps> = ({ title, onPress, showArrow = true }) => (
+  <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.7}>
+    <Text style={styles.menuItemText}>{title}</Text>
+    {showArrow && <MaterialIcons name="chevron-right" size={20} color={COLORS.text.disabled} />}
+  </TouchableOpacity>
 )
 
-export default function AppointmentDetailsScreen() {
+interface CancelDialogProps {
+  visible: boolean
+  onCancel: () => void
+  onConfirm: () => void
+}
+
+const CancelDialog: React.FC<CancelDialogProps> = ({ visible, onCancel, onConfirm }) => (
+  <Modal visible={visible} transparent animationType="fade">
+    <View style={styles.modalOverlay}>
+      <View style={styles.cancelDialog}>
+        <Text style={styles.dialogTitle}>Cancel Appointment</Text>
+        <Text style={styles.dialogMessage}>Are you sure you want to cancel your appointment?</Text>
+
+        <View style={styles.dialogButtons}>
+          <TouchableOpacity style={styles.cancelButton} onPress={onConfirm}>
+            <Text style={styles.cancelButtonText}>Yes, Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.keepButton} onPress={onCancel}>
+            <Text style={styles.keepButtonText}>No, keep</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  </Modal>
+)
+
+const AppointmentDetailsScreen: React.FC = () => {
   const { id } = useLocalSearchParams<{ id: string }>()
   const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id)
+  const [showCancelDialog, setShowCancelDialog] = useState(false)
+  const [isCancelled, setIsCancelled] = useState(false)
+
+  const handleReschedule = () => {
+    router.push(`/reschedule/${appointment?.id}`)
+  }
+
+  const handleCancelPress = () => {
+    setShowCancelDialog(true)
+  }
+
+  const handleCancelConfirm = () => {
+    setShowCancelDialog(false)
+    router.push(`/cancel-reason/${appointment?.id}` as any)
+  }
+
+  const handleCancelDialogClose = () => {
+    setShowCancelDialog(false)
+  }
+
+  const handleTrackRefund = () => {
+    router.push(`/refund-tracking/${appointment?.id}` as any)
+  }
 
   if (!appointment) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Appointment not found</Text>
-          <Button title="Go Back" onPress={() => router.back()} />
         </View>
       </SafeAreaView>
     )
   }
 
-  const handleReschedule = () => {
-    router.push(`/reschedule/${appointment.id}`)
-  }
-
-  const handleJoinCall = () => {
-    Alert.alert("Join Call", "Joining video consultation...")
-  }
-
-  const handleCancel = () => {
-    Alert.alert("Cancel Appointment", "Are you sure you want to cancel this appointment?", [
-      { text: "No", style: "cancel" },
-      { text: "Yes", style: "destructive", onPress: () => console.log("Appointment cancelled") },
-    ])
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Doctor Info */}
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Appointment Details</Text>
+          <View style={styles.placeholder} />
+        </View>
+
+        {/* Doctor Card */}
         <View style={styles.doctorCard}>
           <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
           <View style={styles.doctorInfo}>
-            <Text style={styles.doctorName}>{appointment.doctor.name}</Text>
-            <Text style={styles.doctorSpecialization}>{appointment.doctor.specialization}</Text>
-            <View style={styles.ratingContainer}>
-              <MaterialIcons name="star" size={16} color={COLORS.secondary} />
-              <Text style={styles.rating}>{appointment.doctor.rating}</Text>
-              <Text style={styles.experience}>• {appointment.doctor.experience}</Text>
-            </View>
+            <Text style={styles.doctorName}>Dr. Deepa Godara</Text>
+            <Text style={styles.doctorSpecialization}>Orthodontist</Text>
+            {isCancelled && (
+              <View style={styles.cancelledInfo}>
+                <Text style={styles.cancelledText}>This appointment has been cancelled by doctor.</Text>
+                <TouchableOpacity onPress={handleTrackRefund}>
+                  <Text style={styles.trackRefundText}>Track refund</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </View>
 
-        {/* Appointment Details */}
-        <Section title="Appointment Details">
-          <DetailRow label="Date" value={`Tuesday, ${appointment.date}`} icon="calendar-today" />
-          <DetailRow label="Time" value={appointment.time} icon="access-time" />
-          <DetailRow label="Duration" value={`${appointment.duration} minutes`} icon="timer" />
-          <DetailRow label="Type" value="Video Consultation" icon="videocam" />
-          <DetailRow label="Status" value="Upcoming" icon="schedule" />
-        </Section>
-
-        {/* Symptoms Details */}
-        <Section title="Symptoms Details">
-          <View style={styles.symptomItem}>
-            <Text style={styles.symptomText}>• Headache and dizziness</Text>
-          </View>
-          <View style={styles.symptomItem}>
-            <Text style={styles.symptomText}>• Nausea</Text>
-          </View>
-          <View style={styles.symptomItem}>
-            <Text style={styles.symptomText}>• Fatigue</Text>
-          </View>
-        </Section>
-
-        {/* Booking Details */}
-        <Section title="Booking Details">
-          <DetailRow label="Booking ID" value="#APT001" />
-          <DetailRow label="Booked on" value="10/09/2023" />
-          <DetailRow label="Payment" value="Completed" />
-        </Section>
-
-        {/* Medical Report */}
-        <Section title="Medical Report">
-          <TouchableOpacity style={styles.reportItem}>
-            <MaterialIcons name="description" size={24} color={COLORS.primary} />
-            <Text style={styles.reportText}>Previous consultation report</Text>
-            <MaterialIcons name="download" size={20} color={COLORS.text.secondary} />
-          </TouchableOpacity>
-        </Section>
-
-        {/* Action Buttons */}
-        <View style={styles.actionButtons}>
-          {appointment.canJoin ? (
-            <Button title="Join Call" onPress={handleJoinCall} style={styles.joinButton} />
-          ) : (
-            <View style={styles.countdownContainer}>
-              <Text style={styles.countdownText}>{appointment.countdown}</Text>
-            </View>
-          )}
-
-          <View style={styles.secondaryActions}>
-            <Button title="Reschedule" variant="outline" onPress={handleReschedule} style={styles.rescheduleButton} />
-            <Button title="Cancel" variant="outline" onPress={handleCancel} style={styles.cancelButton} />
-          </View>
+        {/* Menu Items */}
+        <View style={styles.menuContainer}>
+          <MenuItem title="Appointment Details" onPress={() => {}} />
+          <MenuItem title="Symptoms Details" onPress={() => {}} />
+          <MenuItem title="Concern Details" onPress={() => {}} />
+          <MenuItem title="Booking Details" onPress={() => {}} />
+          <MenuItem title="medical Report" onPress={() => {}} />
         </View>
+
+        {/* Action Buttons - Only show if not cancelled */}
+        {!isCancelled && (
+          <View style={styles.actionButtons}>
+            <TouchableOpacity style={styles.rescheduleButton} onPress={handleReschedule}>
+              <Text style={styles.rescheduleText}>Reschedule Appointment</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cancelAppointmentButton} onPress={handleCancelPress}>
+              <Text style={styles.cancelAppointmentText}>Cancel Appointment</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
+
+      {/* Cancel Dialog */}
+      <CancelDialog visible={showCancelDialog} onCancel={handleCancelDialogClose} onConfirm={handleCancelConfirm} />
     </SafeAreaView>
   )
+}
+
+export default function AppointmentDetails() {
+  return <AppointmentDetailsScreen />
 }
 
 const styles = StyleSheet.create({
@@ -158,6 +164,23 @@ const styles = StyleSheet.create({
     color: COLORS.text.primary,
     marginBottom: SPACING.lg,
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: SPACING.md,
+    backgroundColor: COLORS.surface,
+  },
+  backButton: {
+    padding: SPACING.xs,
+  },
+  headerTitle: {
+    ...TYPOGRAPHY.h3,
+    color: COLORS.text.primary,
+  },
+  placeholder: {
+    width: 32,
+  },
   doctorCard: {
     backgroundColor: COLORS.surface,
     margin: SPACING.md,
@@ -168,9 +191,9 @@ const styles = StyleSheet.create({
     ...SHADOWS.medium,
   },
   doctorAvatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     marginRight: SPACING.md,
   },
   doctorInfo: {
@@ -184,106 +207,118 @@ const styles = StyleSheet.create({
   doctorSpecialization: {
     ...TYPOGRAPHY.body1,
     color: COLORS.text.secondary,
-    marginBottom: SPACING.sm,
+    marginBottom: 8,
   },
-  ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+  cancelledInfo: {
+    marginTop: 4,
   },
-  rating: {
+  cancelledText: {
     ...TYPOGRAPHY.body2,
-    color: COLORS.text.primary,
-    marginLeft: 4,
+    color: COLORS.status.error,
+    marginBottom: 4,
   },
-  experience: {
+  trackRefundText: {
     ...TYPOGRAPHY.body2,
-    color: COLORS.text.secondary,
-    marginLeft: 4,
+    color: COLORS.primary,
+    fontWeight: "500",
   },
-  section: {
-    margin: SPACING.md,
-    marginTop: 0,
-  },
-  sectionTitle: {
-    ...TYPOGRAPHY.h3,
-    color: COLORS.text.primary,
-    marginBottom: SPACING.sm,
-  },
-  sectionContent: {
+  menuContainer: {
     backgroundColor: COLORS.surface,
+    marginHorizontal: SPACING.md,
     borderRadius: BORDER_RADIUS.lg,
-    padding: SPACING.md,
     ...SHADOWS.small,
   },
-  detailRow: {
+  menuItem: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: SPACING.sm,
+    justifyContent: "space-between",
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.lg,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.divider,
   },
-  detailLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
-  detailLabel: {
-    ...TYPOGRAPHY.body1,
-    color: COLORS.text.secondary,
-    marginLeft: SPACING.sm,
-  },
-  detailValue: {
+  menuItemText: {
     ...TYPOGRAPHY.body1,
     color: COLORS.text.primary,
-    fontWeight: "500",
-  },
-  symptomItem: {
-    paddingVertical: SPACING.xs,
-  },
-  symptomText: {
-    ...TYPOGRAPHY.body1,
-    color: COLORS.text.primary,
-  },
-  reportItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: SPACING.sm,
-  },
-  reportText: {
-    ...TYPOGRAPHY.body1,
-    color: COLORS.text.primary,
-    flex: 1,
-    marginLeft: SPACING.sm,
   },
   actionButtons: {
     padding: SPACING.md,
-    paddingBottom: SPACING.xl,
+    paddingTop: SPACING.xl,
+    gap: SPACING.md,
   },
-  joinButton: {
-    marginBottom: SPACING.md,
+  rescheduleButton: {
+    backgroundColor: COLORS.primary,
+    borderRadius: BORDER_RADIUS.md,
+    paddingVertical: SPACING.md,
+    alignItems: "center",
   },
-  countdownContainer: {
-    backgroundColor: COLORS.surface,
+  rescheduleText: {
+    ...TYPOGRAPHY.button,
+    color: COLORS.surface,
+    fontWeight: "600",
+  },
+  cancelAppointmentButton: {
+    backgroundColor: COLORS.status.error,
+    borderRadius: BORDER_RADIUS.md,
+    paddingVertical: SPACING.md,
+    alignItems: "center",
+  },
+  cancelAppointmentText: {
+    ...TYPOGRAPHY.button,
+    color: COLORS.surface,
+    fontWeight: "600",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
     padding: SPACING.md,
-    borderRadius: BORDER_RADIUS.lg,
-    marginBottom: SPACING.md,
-    ...SHADOWS.small,
   },
-  countdownText: {
+  cancelDialog: {
+    backgroundColor: COLORS.surface,
+    borderRadius: BORDER_RADIUS.lg,
+    padding: SPACING.xl,
+    width: "100%",
+    maxWidth: 320,
+    ...SHADOWS.medium,
+  },
+  dialogTitle: {
+    ...TYPOGRAPHY.h3,
+    color: COLORS.text.primary,
+    textAlign: "center",
+    marginBottom: SPACING.md,
+  },
+  dialogMessage: {
     ...TYPOGRAPHY.body1,
     color: COLORS.text.secondary,
     textAlign: "center",
+    marginBottom: SPACING.xl,
+    lineHeight: 24,
   },
-  secondaryActions: {
-    flexDirection: "row",
-    gap: SPACING.sm,
-  },
-  rescheduleButton: {
-    flex: 1,
+  dialogButtons: {
+    gap: SPACING.md,
   },
   cancelButton: {
-    flex: 1,
-    borderColor: COLORS.status.error,
+    backgroundColor: COLORS.status.error,
+    borderRadius: BORDER_RADIUS.md,
+    paddingVertical: SPACING.md,
+    alignItems: "center",
+  },
+  cancelButtonText: {
+    ...TYPOGRAPHY.button,
+    color: COLORS.surface,
+    fontWeight: "600",
+  },
+  keepButton: {
+    backgroundColor: COLORS.primary,
+    borderRadius: BORDER_RADIUS.md,
+    paddingVertical: SPACING.md,
+    alignItems: "center",
+  },
+  keepButtonText: {
+    ...TYPOGRAPHY.button,
+    color: COLORS.surface,
+    fontWeight: "600",
   },
 })

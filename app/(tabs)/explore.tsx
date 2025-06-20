@@ -38,29 +38,28 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Profile Header */}
-        <View style={styles.profileHeader}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Profile</Text>
+        </View>
+
+        {/* Profile Section */}
+        <View style={styles.profileSection}>
           <View style={styles.avatarContainer}>
             <Image source={{ uri: MOCK_USER.avatar }} style={styles.avatar} />
-            <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
-              <MaterialIcons name="edit" size={16} color={COLORS.surface} />
-            </TouchableOpacity>
           </View>
-          <Text style={styles.userName}>{MOCK_USER.name}</Text>
-          <Text style={styles.userPhone}>{MOCK_USER.phone}</Text>
+          <Text style={styles.userName}>Mayank Singh</Text>
+          <Text style={styles.userPhone}>+91782-49347</Text>
         </View>
 
         {/* Profile Completion */}
-        <View style={styles.completionCard}>
-          <View style={styles.completionHeader}>
+        <TouchableOpacity style={styles.completionCard}>
+          <View style={styles.completionContent}>
             <MaterialIcons name="person" size={20} color={COLORS.primary} />
-            <Text style={styles.completionTitle}>Your Profile is {MOCK_USER.profileCompletion}% complete</Text>
-            <MaterialIcons name="chevron-right" size={20} color={COLORS.text.disabled} />
+            <Text style={styles.completionText}>Your Profile is 60% complete</Text>
           </View>
-          <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: `${MOCK_USER.profileCompletion}%` }]} />
-          </View>
-        </View>
+          <MaterialIcons name="chevron-right" size={20} color={COLORS.text.disabled} />
+        </TouchableOpacity>
 
         {/* Menu Section */}
         <View style={styles.menuSection}>
@@ -76,17 +75,6 @@ export default function ProfileScreen() {
             />
           </View>
         </View>
-
-        {/* Additional Options */}
-        <View style={styles.menuSection}>
-          <Text style={styles.sectionTitle}>Account</Text>
-          <View style={styles.menuContainer}>
-            <MenuItem icon="settings" title="Settings" onPress={() => handleMenuPress("Settings")} />
-            <MenuItem icon="help" title="Help & Support" onPress={() => handleMenuPress("Help & Support")} />
-            <MenuItem icon="info" title="About" onPress={() => handleMenuPress("About")} />
-            <MenuItem icon="logout" title="Logout" onPress={() => handleMenuPress("Logout")} showArrow={false} />
-          </View>
-        </View>
       </ScrollView>
     </SafeAreaView>
   )
@@ -100,33 +88,28 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  profileHeader: {
+  header: {
+    backgroundColor: COLORS.surface,
+    paddingVertical: SPACING.lg,
+    alignItems: "center",
+  },
+  headerTitle: {
+    ...TYPOGRAPHY.h2,
+    color: COLORS.text.primary,
+  },
+  profileSection: {
+    backgroundColor: COLORS.surface,
     alignItems: "center",
     paddingVertical: SPACING.xl,
-    backgroundColor: COLORS.surface,
     marginBottom: SPACING.md,
   },
   avatarContainer: {
-    position: "relative",
     marginBottom: SPACING.md,
   },
   avatar: {
     width: 80,
     height: 80,
     borderRadius: 40,
-  },
-  editButton: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    backgroundColor: COLORS.primary,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 2,
-    borderColor: COLORS.surface,
   },
   userName: {
     ...TYPOGRAPHY.h2,
@@ -143,29 +126,20 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.md,
     padding: SPACING.md,
     borderRadius: BORDER_RADIUS.lg,
-    ...SHADOWS.small,
-  },
-  completionHeader: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: SPACING.sm,
+    justifyContent: "space-between",
+    ...SHADOWS.small,
   },
-  completionTitle: {
+  completionContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  completionText: {
     ...TYPOGRAPHY.body1,
     color: COLORS.text.primary,
-    flex: 1,
     marginLeft: SPACING.sm,
-  },
-  progressBar: {
-    height: 6,
-    backgroundColor: COLORS.background,
-    borderRadius: BORDER_RADIUS.sm,
-    overflow: "hidden",
-  },
-  progressFill: {
-    height: "100%",
-    backgroundColor: COLORS.primary,
-    borderRadius: BORDER_RADIUS.sm,
   },
   menuSection: {
     marginBottom: SPACING.lg,

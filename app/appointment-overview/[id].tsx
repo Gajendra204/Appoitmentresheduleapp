@@ -57,18 +57,16 @@ export default function AppointmentOverviewScreen() {
   }
 
   const handleEditConcern = () => {
-    // Navigate to edit concern screen
-    console.log("Edit concern")
+    router.push(`/edit-concern/${id}` as any)
   }
 
   const handleEditBasicInfo = () => {
-    // Navigate to edit basic info screen
-    console.log("Edit basic info")
+    router.push(`/edit-basic-info/${id}` as any)
   }
 
   const handleConfirmAppointment = () => {
     if (appointment) {
-      router.push(`/appointment-confirmed/${appointment.id}?date=${date}&time=${time}` as any)
+      router.push(`/appointment-confirmed/${appointment.id}?date=${date}&time=${time}`)
     }
   }
 
