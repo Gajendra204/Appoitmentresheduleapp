@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Image, Modal } from "react-native"
 import { useLocalSearchParams, router } from "expo-router"
 import { MaterialIcons } from "@expo/vector-icons"
@@ -48,10 +48,17 @@ const CancelDialog: React.FC<CancelDialogProps> = ({ visible, onCancel, onConfir
 )
 
 const AppointmentDetailsScreen: React.FC = () => {
-  const { id } = useLocalSearchParams<{ id: string }>()
+  const { id, cancelled } = useLocalSearchParams<{ id: string; cancelled?: string }>()
   const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id)
   const [showCancelDialog, setShowCancelDialog] = useState(false)
   const [isCancelled, setIsCancelled] = useState(false)
+
+  // Set cancelled state based on URL parameter
+  useEffect(() => {
+    if (cancelled === "true") {
+      setIsCancelled(true)
+    }
+  }, [cancelled])
 
   const handleReschedule = () => {
     router.push(`/reschedule/${appointment?.id}`)
@@ -63,7 +70,7 @@ const AppointmentDetailsScreen: React.FC = () => {
 
   const handleCancelConfirm = () => {
     setShowCancelDialog(false)
-    router.push(`/cancel-reason/${appointment?.id}` as any)
+    router.push(`/cancel-reason/${appointment?.id}`)
   }
 
   const handleCancelDialogClose = () => {
@@ -71,7 +78,15 @@ const AppointmentDetailsScreen: React.FC = () => {
   }
 
   const handleTrackRefund = () => {
-    router.push(`/refund-tracking/${appointment?.id}` as any)
+    router.push(`/refund-tracking/${appointment?.id}`)
+  }
+
+  const handleMenuPress = (item: string) => {
+    if (item === "Appointment Details") {
+      router.push(`/appointment-detail-view/${appointment?.id}` as any)
+    } else {
+      console.log(`${item} pressed`)
+    }
   }
 
   if (!appointment) {
@@ -100,8 +115,10 @@ const AppointmentDetailsScreen: React.FC = () => {
         <View style={styles.doctorCard}>
           <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
           <View style={styles.doctorInfo}>
-            <Text style={styles.doctorName}>Dr. Deepa Godara</Text>
-            <Text style={styles.doctorSpecialization}>Orthodontist</Text>
+            <View style={styles.doctorNameRow}>
+              <Text style={styles.doctorLabel}>Doctor name</Text>
+              <Text style={styles.doctorName}>Dr. Deepa Godara</Text>
+            </View>
             {isCancelled && (
               <View style={styles.cancelledInfo}>
                 <Text style={styles.cancelledText}>This appointment has been cancelled by doctor.</Text>
@@ -115,11 +132,11 @@ const AppointmentDetailsScreen: React.FC = () => {
 
         {/* Menu Items */}
         <View style={styles.menuContainer}>
-          <MenuItem title="Appointment Details" onPress={() => {}} />
-          <MenuItem title="Symptoms Details" onPress={() => {}} />
-          <MenuItem title="Concern Details" onPress={() => {}} />
-          <MenuItem title="Booking Details" onPress={() => {}} />
-          <MenuItem title="medical Report" onPress={() => {}} />
+          <MenuItem title="Appointment Details" onPress={() => handleMenuPress("Appointment Details")} />
+          <MenuItem title="Symptoms Details" onPress={() => handleMenuPress("Symptoms Details")} />
+          <MenuItem title="Coupons Details" onPress={() => handleMenuPress("Coupons Details")} />
+          <MenuItem title="Booking Details" onPress={() => handleMenuPress("Booking Details")} />
+          <MenuItem title="medical Report" onPress={() => handleMenuPress("medical Report")} />
         </View>
 
         {/* Action Buttons - Only show if not cancelled */}
@@ -187,7 +204,7 @@ const styles = StyleSheet.create({
     padding: SPACING.lg,
     borderRadius: BORDER_RADIUS.lg,
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     ...SHADOWS.medium,
   },
   doctorAvatar: {
@@ -199,15 +216,21 @@ const styles = StyleSheet.create({
   doctorInfo: {
     flex: 1,
   },
-  doctorName: {
-    ...TYPOGRAPHY.h2,
-    color: COLORS.text.primary,
-    marginBottom: 4,
+  doctorNameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: SPACING.sm,
   },
-  doctorSpecialization: {
-    ...TYPOGRAPHY.body1,
+  doctorLabel: {
+    ...TYPOGRAPHY.body2,
     color: COLORS.text.secondary,
-    marginBottom: 8,
+    marginRight: SPACING.md,
+    minWidth: 80,
+  },
+  doctorName: {
+    ...TYPOGRAPHY.body1,
+    color: COLORS.text.primary,
+    fontWeight: "500",
   },
   cancelledInfo: {
     marginTop: 4,

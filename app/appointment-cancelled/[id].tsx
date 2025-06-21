@@ -8,8 +8,8 @@ export default function AppointmentCancelledScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
 
   const handleGotIt = () => {
-    router.dismissAll()
-    router.replace("/(tabs)")
+    // Navigate back to appointment details with cancelled state
+    router.replace(`/appointment/${id}?cancelled=true`)
   }
 
   return (
@@ -25,7 +25,7 @@ export default function AppointmentCancelledScreen() {
         {/* Success Message */}
         <View style={styles.messageContainer}>
           <Text style={styles.title}>Appointment cancelled</Text>
-          <Text style={styles.subtitle}>A refund will be initiated to your wallet within 5 few days.</Text>
+          <Text style={styles.subtitle}>A refund will be initiated to your wallet within a few days.</Text>
           <Text style={styles.thankYou}>Thank you for your patience!</Text>
         </View>
 

@@ -11,19 +11,20 @@ interface RefundStepProps {
   subtitle: string
   isCompleted: boolean
   isActive: boolean
+  isLast?: boolean
 }
 
-const RefundStep: React.FC<RefundStepProps> = ({ title, subtitle, isCompleted, isActive }) => (
+const RefundStep: React.FC<RefundStepProps> = ({ title, subtitle, isCompleted, isActive, isLast }) => (
   <View style={styles.stepContainer}>
     <View style={styles.stepIndicator}>
       <View style={[styles.stepCircle, isCompleted && styles.completedStep, isActive && styles.activeStep]}>
         {isCompleted && <MaterialIcons name="check" size={16} color={COLORS.surface} />}
       </View>
-      {!isActive && <View style={styles.stepLine} />}
+      {!isLast && <View style={[styles.stepLine, isCompleted && styles.completedLine]} />}
     </View>
     <View style={styles.stepContent}>
       <Text style={[styles.stepTitle, isCompleted && styles.completedStepTitle]}>{title}</Text>
-      <Text style={styles.stepSubtitle}>{subtitle}</Text>
+      {subtitle && <Text style={styles.stepSubtitle}>{subtitle}</Text>}
     </View>
   </View>
 )
@@ -32,7 +33,7 @@ export default function RefundTrackingScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const [refundCompleted, setRefundCompleted] = React.useState(false)
 
-  // Simulate refund completion after 3 seconds
+  // Simulate refund completion after 3 seconds for demo
   React.useEffect(() => {
     const timer = setTimeout(() => {
       setRefundCompleted(true)
@@ -54,7 +55,7 @@ export default function RefundTrackingScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Refund Details */}
+        {/* Refund Details Card */}
         <View style={styles.refundCard}>
           <View style={styles.refundRow}>
             <Text style={styles.refundLabel}>Appointment ID</Text>
@@ -69,10 +70,12 @@ export default function RefundTrackingScreen() {
             <Text style={styles.refundValue}>500 INR</Text>
           </View>
 
-          <Text style={styles.cancelledText}>This appointment has been cancelled by doctor.</Text>
+          <View style={styles.cancelledNotice}>
+            <Text style={styles.cancelledText}>This appointment has been cancelled by doctor.</Text>
+          </View>
         </View>
 
-        {/* Refund Progress */}
+        {/* Refund Progress Section */}
         <View style={styles.progressSection}>
           <Text style={styles.progressTitle}>Track your refund process</Text>
 
@@ -85,7 +88,7 @@ export default function RefundTrackingScreen() {
             />
             <RefundStep
               title="Refund processing"
-              subtitle="Sat, 11th Sep 25"
+              subtitle={refundCompleted ? "Sat, 11th Sep 25" : "Sat, 11th Sep 25"}
               isCompleted={refundCompleted}
               isActive={!refundCompleted}
             />
@@ -94,6 +97,7 @@ export default function RefundTrackingScreen() {
               subtitle={refundCompleted ? "Mon, 13th Sep 25, 07:32 PM" : ""}
               isCompleted={refundCompleted}
               isActive={false}
+              isLast={true}
             />
           </View>
 
@@ -158,10 +162,15 @@ const styles = StyleSheet.create({
     color: COLORS.text.primary,
     fontWeight: "500",
   },
+  cancelledNotice: {
+    marginTop: SPACING.md,
+    paddingTop: SPACING.md,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.divider,
+  },
   cancelledText: {
     ...TYPOGRAPHY.body2,
     color: COLORS.status.error,
-    marginTop: SPACING.md,
   },
   progressSection: {
     margin: SPACING.md,
@@ -179,7 +188,7 @@ const styles = StyleSheet.create({
   },
   stepContainer: {
     flexDirection: "row",
-    marginBottom: SPACING.lg,
+    marginBottom: SPACING.md,
   },
   stepIndicator: {
     alignItems: "center",
@@ -201,12 +210,16 @@ const styles = StyleSheet.create({
   },
   stepLine: {
     width: 2,
-    height: 30,
+    height: 40,
     backgroundColor: COLORS.divider,
     marginTop: 4,
   },
+  completedLine: {
+    backgroundColor: COLORS.status.success,
+  },
   stepContent: {
     flex: 1,
+    paddingTop: 2,
   },
   stepTitle: {
     ...TYPOGRAPHY.body1,

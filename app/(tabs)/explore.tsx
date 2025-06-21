@@ -2,7 +2,7 @@ import type React from "react"
 import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Image, Alert } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 import { router } from "expo-router"
-import { MOCK_USER } from "../../constants/mockData"
+import { MOCK_USER, MOCK_APPOINTMENTS } from "../../constants/mockData"
 import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../../constants/theme"
 
 interface MenuItemProps {
@@ -25,7 +25,8 @@ const MenuItem: React.FC<MenuItemProps> = ({ icon, title, onPress, showArrow = t
 export default function ProfileScreen() {
   const handleMenuPress = (item: string) => {
     if (item === "My Appointments") {
-      router.push("/(tabs)")
+      // Navigate to the first appointment details
+      router.push(`/appointment/${MOCK_APPOINTMENTS[0].id}`)
     } else {
       Alert.alert("Coming Soon", `${item} feature will be available soon!`)
     }
