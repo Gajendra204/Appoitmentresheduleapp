@@ -4,42 +4,115 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { StyleSheet } from "react-native"
 import { COLORS } from "../constants/theme"
+import { AppProvider } from "../contexts/AppContext"
 
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
-        <StatusBar style="light" backgroundColor={COLORS.primary} />
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: COLORS.primary,
-            },
-            headerTintColor: COLORS.text.inverse,
-            headerTitleStyle: {
-              fontWeight: "600",
-            },
-            contentStyle: {
-              backgroundColor: COLORS.background,
-            },
-          }}
-        >
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="appointment/[id]"
-            options={{
-              title: "Appointment Details",
-              presentation: "card",
+        <AppProvider>
+          <StatusBar style="light" backgroundColor={COLORS.primary} />
+          <Stack
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: COLORS.primary,
+              },
+              headerTintColor: COLORS.text.inverse,
+              headerTitleStyle: {
+                fontWeight: "600",
+              },
+              contentStyle: {
+                backgroundColor: COLORS.background,
+              },
             }}
-          />
-          <Stack.Screen
-            name="reschedule/[id]"
-            options={{
-              title: "Reschedule Reason",
-              presentation: "modal",
-            }}
-          />
-        </Stack>
+          >
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="appointment/[id]"
+              options={{
+                title: "Appointment Details",
+                presentation: "card",
+              }}
+            />
+            <Stack.Screen
+              name="appointment-detail-view/[id]"
+              options={{
+                title: "Appointment Details",
+                presentation: "card",
+              }}
+            />
+            <Stack.Screen
+              name="reschedule/[id]"
+              options={{
+                title: "Reschedule Reason",
+                presentation: "modal",
+              }}
+            />
+            <Stack.Screen
+              name="choose-date/[id]"
+              options={{
+                title: "Choose Date",
+                presentation: "card",
+              }}
+            />
+            <Stack.Screen
+              name="choose-time/[id]"
+              options={{
+                title: "Choose Time",
+                presentation: "card",
+              }}
+            />
+            <Stack.Screen
+              name="appointment-overview/[id]"
+              options={{
+                title: "Appointment Overview",
+                presentation: "card",
+              }}
+            />
+            <Stack.Screen
+              name="appointment-confirmed/[id]"
+              options={{
+                title: "Appointment Confirmed",
+                presentation: "fullScreenModal",
+              }}
+            />
+            <Stack.Screen
+              name="edit-basic-info/[id]"
+              options={{
+                title: "Basic Info",
+                presentation: "card",
+              }}
+            />
+            <Stack.Screen
+              name="edit-concern/[id]"
+              options={{
+                title: "Your Concern",
+                presentation: "card",
+              }}
+            />
+            <Stack.Screen
+              name="cancel-reason/[id]"
+              options={{
+                title: "Cancel Reason",
+                presentation: "modal",
+              }}
+            />
+            <Stack.Screen
+              name="appointment-cancelled/[id]"
+              options={{
+                title: "Appointment Cancelled",
+                presentation: "fullScreenModal",
+              }}
+            />
+            <Stack.Screen
+              name="refund-tracking/[id]"
+              options={{
+                title: "Refund Tracking",
+                presentation: "card",
+              }}
+            />
+          </Stack>
+        </AppProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   )

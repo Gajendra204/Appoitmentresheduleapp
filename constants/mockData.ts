@@ -22,7 +22,7 @@ export const MOCK_DOCTORS: Doctor[] = [
 export const MOCK_USER: User = {
   id: "1",
   name: "Mayank Singh",
-  phone: "+91782-49347",
+  phone: "81782-49347",
   email: "mayank@example.com",
   avatar: "/placeholder.svg?height=100&width=100",
   profileCompletion: 60,
@@ -32,7 +32,7 @@ export const MOCK_APPOINTMENTS: Appointment[] = [
   {
     id: "1",
     doctor: MOCK_DOCTORS[0],
-    date: "13/09/2023",
+    date: "13/09/2025",
     time: "10:30 AM",
     status: "upcoming",
     type: "video",
@@ -41,8 +41,8 @@ export const MOCK_APPOINTMENTS: Appointment[] = [
   },
   {
     id: "2",
-    doctor: MOCK_DOCTORS[0],
-    date: "13/09/2023",
+    doctor: MOCK_DOCTORS[1],
+    date: "13/09/2025",
     time: "10:30 AM",
     status: "upcoming",
     type: "video",

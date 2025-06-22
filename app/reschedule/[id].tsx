@@ -5,10 +5,39 @@ import { useState } from "react"
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from "react-native"
 import { useLocalSearchParams, router } from "expo-router"
 import { MaterialIcons } from "@expo/vector-icons"
-import { RESCHEDULE_REASONS } from "../../constants/mockData"
+import { useApp } from "../../contexts/AppContext"
+import { AppointmentService } from "../../services/appointmentService"
+import { FormValidator } from "../../utils/validation"
 import { Button } from "../../components/Button"
 import { OtherReasonModal } from "../../components/OtherReasonModal"
 import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../../constants/theme"
+
+const RESCHEDULE_REASONS = [
+  {
+    id: "1",
+    title: "Emergency work",
+    icon: "work" as const,
+    description: "Urgent work commitment",
+  },
+  {
+    id: "2",
+    title: "Financial issues",
+    icon: "attach-money" as const,
+    description: "Payment related concerns",
+  },
+  {
+    id: "3",
+    title: "Scheduling conflict",
+    icon: "schedule" as const,
+    description: "Time slot conflict",
+  },
+  {
+    id: "4",
+    title: "Other",
+    icon: "more-horiz" as const,
+    description: "Other reasons",
+  },
+]
 
 interface ReasonCardProps {
   reason: (typeof RESCHEDULE_REASONS)[0]
@@ -46,10 +75,14 @@ const ReasonCard: React.FC<ReasonCardProps> = ({ reason, isSelected, onSelect })
 
 export default function RescheduleReasonScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
+  const { state, dispatch } = useApp()
   const [selectedReason, setSelectedReason] = useState<string | null>(null)
   const [customReason, setCustomReason] = useState<string>("")
   const [showOtherModal, setShowOtherModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const appointment = state.appointments.find((apt) => apt.id === id)
 
   const handleReasonSelect = (reasonId: string) => {
     if (reasonId === "4") {
@@ -58,30 +91,56 @@ export default function RescheduleReasonScreen() {
     } else {
       setSelectedReason(reasonId)
       setCustomReason("")
+      setErrors({})
     }
   }
 
   const handleOtherReasonSave = (reason: string) => {
+    const validation = FormValidator.validateCustomReason(reason)
+    if (!validation.isValid) {
+      setErrors(validation.errors)
+      return
+    }
+
     setCustomReason(reason)
     setSelectedReason("4")
     setShowOtherModal(false)
+    setErrors({})
   }
 
   const handleConfirm = async () => {
-    if (!selectedReason) {
+    // Validate reason selection
+    const validation = FormValidator.validateRescheduleReason(selectedReason || "")
+    if (!validation.isValid) {
+      setErrors(validation.errors)
       Alert.alert("Please select a reason", "You must select a reason for rescheduling.")
       return
     }
 
+    if (!appointment) {
+      Alert.alert("Error", "Appointment not found.")
+      return
+    }
+
     setIsLoading(true)
+    setErrors({})
+
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const reasonText =
+        selectedReason === "4" ? customReason : RESCHEDULE_REASONS.find((r) => r.id === selectedReason)?.title || ""
+
+      // Call the service to reschedule
+      await AppointmentService.rescheduleAppointment(
+        appointment.id,
+        appointment.date, // Will be updated in next screen
+        appointment.time, // Will be updated in next screen
+        reasonText,
+      )
 
       // Navigate to date selection
-      router.push(`/choose-date/${id}` as any)
+      router.push(`/choose-date/${id}`)
     } catch (error) {
-      Alert.alert("Error", "Failed to process reschedule request. Please try again.")
+      Alert.alert("Error", error instanceof Error ? error.message : "Failed to process reschedule request.")
     } finally {
       setIsLoading(false)
     }
@@ -89,6 +148,16 @@ export default function RescheduleReasonScreen() {
 
   const handleCancel = () => {
     router.back()
+  }
+
+  if (!appointment) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Appointment not found</Text>
+        </View>
+      </SafeAreaView>
+    )
   }
 
   return (
@@ -117,6 +186,17 @@ export default function RescheduleReasonScreen() {
             </View>
           )}
         </View>
+
+        {/* Error Messages */}
+        {Object.keys(errors).length > 0 && (
+          <View style={styles.errorContainer}>
+            {Object.values(errors).map((error, index) => (
+              <Text key={index} style={styles.errorMessage}>
+                {error}
+              </Text>
+            ))}
+          </View>
+        )}
 
         {/* Action Buttons */}
         <View style={styles.actionButtons}>
@@ -244,6 +324,20 @@ const styles = StyleSheet.create({
   customReasonText: {
     ...TYPOGRAPHY.body1,
     color: COLORS.text.primary,
+  },
+  errorContainer: {
+    marginBottom: SPACING.md,
+  },
+  errorMessage: {
+    ...TYPOGRAPHY.body2,
+    color: COLORS.status.error,
+    textAlign: "center",
+    marginBottom: SPACING.xs,
+  },
+  errorText: {
+    ...TYPOGRAPHY.h2,
+    color: COLORS.text.primary,
+    textAlign: "center",
   },
   actionButtons: {
     gap: SPACING.md,

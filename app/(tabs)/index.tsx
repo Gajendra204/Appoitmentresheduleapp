@@ -1,113 +1,172 @@
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Image } from "react-native"
+"use client"
+
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+  RefreshControl,
+  Dimensions,
+} from "react-native"
 import { router } from "expo-router"
-import { MOCK_APPOINTMENTS, MOCK_USER } from "../../constants/mockData"
+import { useState } from "react"
+import { MaterialIcons } from "@expo/vector-icons"
+import { useApp } from "../../contexts/AppContext"
 import { COLORS, TYPOGRAPHY, SPACING, SHADOWS, BORDER_RADIUS } from "../../constants/theme"
 
+const { width: SCREEN_WIDTH } = Dimensions.get("window")
+
 export default function Home() {
+  const { state } = useApp()
+  const [refreshing, setRefreshing] = useState(false)
+
   const handleViewAppointmentDetails = (appointmentId: string) => {
     router.push(`/appointment/${appointmentId}`)
   }
 
-  const handleJoinCall = () => {
-    console.log("Joining call...")
+  const handleJoinCall = (appointmentId: string) => {
+    console.log("Joining call for appointment:", appointmentId)
   }
 
-  const handleProfilePress = () => {
-    router.push("/(tabs)/explore")
+  const onRefresh = async () => {
+    setRefreshing(true)
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    setRefreshing(false)
   }
+
+  const upcomingAppointments = state.appointments.filter((apt) => apt.status === "upcoming")
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.greeting}>Namaste Mayank</Text>
-            <Text style={styles.subGreeting}>Welcome to Affixam</Text>
+    <View style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Curved Header with Nature Background */}
+        <View style={styles.headerContainer}>
+          <View style={styles.curvedHeader}>
+            {/* Status Bar Area */}
+            <SafeAreaView>
+              <View style={styles.statusBarContent}>
+                <View style={styles.statusIcons}>
+                  <Text style={styles.timeText}>12:30</Text>
+                </View>
+              </View>
+            </SafeAreaView>
+
+            {/* Header Icons */}
+            <View style={styles.headerIcons}>
+              <TouchableOpacity style={styles.iconButton}>
+                <MaterialIcons name="shopping-bag" size={24} color={COLORS.surface} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.iconButton}>
+                <MaterialIcons name="shopping-cart" size={24} color={COLORS.surface} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.iconButton}>
+                <MaterialIcons name="eco" size={24} color={COLORS.surface} />
+              </TouchableOpacity>
+            </View>
+
+            {/* Greeting */}
+            <View style={styles.greetingContainer}>
+              <Text style={styles.greeting}>Namaste {state.user?.name?.split(" ")[0] || "Mayank"}</Text>
+              <Text style={styles.subGreeting}>Welcome to Amrutam</Text>
+            </View>
+
+            {/* Nature Illustrations */}
+            <View style={styles.natureIllustrations}>
+              {/* Trees and landscape elements */}
+              <View style={styles.tree1} />
+              <View style={styles.tree2} />
+              <View style={styles.mountain1} />
+              <View style={styles.mountain2} />
+            </View>
           </View>
-          <TouchableOpacity onPress={handleProfilePress}>
-            <Image source={{ uri: MOCK_USER.avatar }} style={styles.profileAvatar} />
+        </View>
+
+        {/* Content Area */}
+        <View style={styles.contentArea}>
+          {/* Search Bar */}
+          <TouchableOpacity style={styles.searchContainer}>
+            <MaterialIcons name="search" size={20} color={COLORS.text.disabled} />
           </TouchableOpacity>
-        </View>
 
-        {/* Search Bar */}
-        <TouchableOpacity style={styles.searchContainer}>
-          <Text style={styles.searchPlaceholder}>🔍 Search</Text>
-        </TouchableOpacity>
-
-        {/* Banner */}
-        <View style={styles.banner}>
-          <Text style={styles.bannerText}>Special Gifting options for your special ones</Text>
-        </View>
-
-        {/* Upcoming Appointments Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Upcoming Appointment</Text>
-
-          {/* First Appointment Card */}
-          <View style={styles.appointmentCard}>
-            <View style={styles.cardHeader}>
-              <Image source={{ uri: MOCK_APPOINTMENTS[0].doctor.avatar }} style={styles.doctorAvatar} />
-              <View style={styles.doctorInfo}>
-                <Text style={styles.doctorName}>Dr. Deepa Godara</Text>
-                <Text style={styles.specialization}>Orthodontist</Text>
-                <Text style={styles.status}>Upcoming</Text>
-              </View>
-            </View>
-
-            <View style={styles.appointmentInfo}>
-              <Text style={styles.dateTime}>📅 Tuesday, 13/09/2023</Text>
-              <Text style={styles.dateTime}>🕐 10:30 AM</Text>
-            </View>
-
-            <View style={styles.actions}>
-              <TouchableOpacity
-                style={styles.viewDetailButton}
-                onPress={() => handleViewAppointmentDetails(MOCK_APPOINTMENTS[0].id)}
-              >
-                <Text style={styles.viewDetailText}>View Detail</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.joinCallButton} onPress={handleJoinCall}>
-                <Text style={styles.joinCallText}>Join Call</Text>
-              </TouchableOpacity>
+          {/* Shilajit Banner */}
+          <View style={styles.bannerContainer}>
+            <Image
+              source={{ uri: "/placeholder.svg?height=150&width=300" }}
+              style={styles.bannerImage}
+              resizeMode="cover"
+            />
+            <View style={styles.bannerOverlay}>
+              <Text style={styles.bannerTitle}>Shilajit</Text>
+              <Text style={styles.bannerSubtitle}>REINVENTED</Text>
+              <Text style={styles.bannerDescription}>A wonderful blend for strength, stamina & vitality</Text>
             </View>
           </View>
 
-          {/* Second Appointment Card with Countdown */}
-          <View style={styles.appointmentCard}>
-            <View style={styles.cardHeader}>
-              <Image source={{ uri: MOCK_APPOINTMENTS[1].doctor.avatar }} style={styles.doctorAvatar} />
-              <View style={styles.doctorInfo}>
-                <Text style={styles.doctorName}>Dr. Deepa Godara</Text>
-                <Text style={styles.specialization}>Orthodontist</Text>
-                <Text style={styles.status}>Upcoming</Text>
+          {/* Upcoming Appointment Section */}
+          <View style={styles.appointmentSection}>
+            <Text style={styles.sectionTitle}>Upcoming Appointment</Text>
+
+            {upcomingAppointments.length === 0 ? (
+              <View style={styles.emptyState}>
+                <Text style={styles.emptyStateText}>No upcoming appointments</Text>
               </View>
-            </View>
+            ) : (
+              upcomingAppointments.slice(0, 1).map((appointment) => (
+                <View key={appointment.id} style={styles.appointmentCard}>
+                  <View style={styles.appointmentHeader}>
+                    <View style={styles.doctorInfo}>
+                      <Text style={styles.doctorName}>{appointment.doctor.name}</Text>
+                      <Text style={styles.specialization}>{appointment.doctor.specialization}</Text>
+                      <View style={styles.statusContainer}>
+                        <View style={styles.statusDot} />
+                        <Text style={styles.statusText}>Upcoming</Text>
+                      </View>
+                    </View>
+                    <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
+                  </View>
 
-            <View style={styles.appointmentInfo}>
-              <Text style={styles.dateTime}>📅 Tuesday, 13/09/2023</Text>
-              <Text style={styles.dateTime}>🕐 10:30 AM</Text>
-            </View>
+                  <View style={styles.appointmentDetails}>
+                    <View style={styles.detailRow}>
+                      <MaterialIcons name="calendar-today" size={16} color={COLORS.text.secondary} />
+                      <Text style={styles.detailText}>Tuesday, 13/09/2023</Text>
+                    </View>
+                    <View style={styles.detailRow}>
+                      <MaterialIcons name="access-time" size={16} color={COLORS.text.secondary} />
+                      <Text style={styles.detailText}>10:30 AM</Text>
+                    </View>
+                  </View>
 
-            <View style={styles.countdownContainer}>
-              <Text style={styles.countdown}>Your video consultation starts in 3:52 hour</Text>
-            </View>
+                  <View style={styles.appointmentActions}>
+                    <TouchableOpacity
+                      style={styles.viewDetailButton}
+                      onPress={() => handleViewAppointmentDetails(appointment.id)}
+                    >
+                      <Text style={styles.viewDetailText}>View Detail</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.joinCallButton} onPress={() => handleJoinCall(appointment.id)}>
+                      <Text style={styles.joinCallText}>Join Call</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))
+            )}
+          </View>
 
-            <View style={styles.actions}>
-              <TouchableOpacity
-                style={styles.viewDetailButton}
-                onPress={() => handleViewAppointmentDetails(MOCK_APPOINTMENTS[1].id)}
-              >
-                <Text style={styles.viewDetailText}>View Detail</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.joinCallButton, styles.disabledButton]} disabled>
-                <Text style={[styles.joinCallText, styles.disabledText]}>Join Call</Text>
-              </TouchableOpacity>
-            </View>
+          {/* Special Gifting Section */}
+          <View style={styles.giftingSection}>
+            <Text style={styles.giftingText}>Special Gifting options, for your special ones</Text>
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -118,77 +177,201 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    paddingHorizontal: SPACING.md,
   },
-  header: {
+  scrollContent: {
+    paddingBottom: 100, // Space for bottom navigation
+  },
+  headerContainer: {
+    position: "relative",
+    height: 200,
+  },
+  curvedHeader: {
+    height: 200,
+    backgroundColor: "#7FB069", // Light green gradient start
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    position: "relative",
+    overflow: "hidden",
+  },
+  statusBarContent: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: SPACING.lg,
+    paddingHorizontal: SPACING.md,
+    paddingTop: 10,
   },
-  greeting: {
-    ...TYPOGRAPHY.h1,
-    color: COLORS.text.primary,
+  statusIcons: {
+    flex: 1,
+    alignItems: "flex-end",
   },
-  subGreeting: {
-    ...TYPOGRAPHY.body2,
-    color: COLORS.text.secondary,
-    marginTop: 2,
+  timeText: {
+    color: COLORS.surface,
+    fontSize: 14,
+    fontWeight: "500",
   },
-  profileAvatar: {
+  headerIcons: {
+    position: "absolute",
+    top: 50,
+    right: SPACING.md,
+    flexDirection: "row",
+    gap: SPACING.sm,
+  },
+  iconButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  greetingContainer: {
+    paddingHorizontal: SPACING.md,
+    paddingTop: SPACING.md,
+  },
+  greeting: {
+    ...TYPOGRAPHY.h1,
+    color: COLORS.surface,
+    fontSize: 24,
+    fontWeight: "600",
+  },
+  subGreeting: {
+    ...TYPOGRAPHY.body1,
+    color: "rgba(255, 255, 255, 0.9)",
+    marginTop: 4,
+  },
+  natureIllustrations: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 80,
+  },
+  tree1: {
+    position: "absolute",
+    right: 20,
+    bottom: 0,
+    width: 60,
+    height: 60,
+    backgroundColor: "#5A8A3A",
+    borderRadius: 30,
+    opacity: 0.7,
+  },
+  tree2: {
+    position: "absolute",
+    right: 80,
+    bottom: 10,
+    width: 40,
+    height: 50,
+    backgroundColor: "#4A7C2A",
+    borderRadius: 20,
+    opacity: 0.6,
+  },
+  mountain1: {
+    position: "absolute",
+    left: 0,
+    bottom: 0,
+    width: 100,
+    height: 40,
+    backgroundColor: "#6B9B4F",
+    borderTopRightRadius: 50,
+    opacity: 0.5,
+  },
+  mountain2: {
+    position: "absolute",
+    left: 80,
+    bottom: 0,
+    width: 80,
+    height: 30,
+    backgroundColor: "#5A8A3F",
+    borderTopRightRadius: 40,
+    opacity: 0.4,
+  },
+  contentArea: {
+    flex: 1,
+    paddingHorizontal: SPACING.md,
+    marginTop: -20, // Overlap with header
   },
   searchContainer: {
     backgroundColor: COLORS.surface,
-    padding: SPACING.md,
     borderRadius: 25,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.lg,
     marginBottom: SPACING.lg,
+    flexDirection: "row",
+    alignItems: "center",
     ...SHADOWS.small,
   },
-  searchPlaceholder: {
-    ...TYPOGRAPHY.body1,
-    color: COLORS.text.disabled,
-  },
-  banner: {
-    backgroundColor: COLORS.primary,
-    padding: SPACING.lg,
-    borderRadius: 12,
+  bannerContainer: {
+    height: 150,
+    borderRadius: BORDER_RADIUS.lg,
+    overflow: "hidden",
     marginBottom: SPACING.lg,
-    ...SHADOWS.medium,
+    position: "relative",
   },
-  bannerText: {
-    ...TYPOGRAPHY.body1,
+  bannerImage: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#8B4513", // Brown background for Shilajit theme
+  },
+  bannerOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    justifyContent: "center",
+    paddingHorizontal: SPACING.lg,
+  },
+  bannerTitle: {
     color: COLORS.surface,
-    textAlign: "center",
-    fontWeight: "500",
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 4,
   },
-  section: {
-    marginBottom: SPACING.xl,
+  bannerSubtitle: {
+    color: COLORS.surface,
+    fontSize: 24,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  bannerDescription: {
+    color: "rgba(255, 255, 255, 0.9)",
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  appointmentSection: {
+    marginBottom: SPACING.lg,
   },
   sectionTitle: {
-    ...TYPOGRAPHY.h2,
+    ...TYPOGRAPHY.h3,
     color: COLORS.text.primary,
     marginBottom: SPACING.md,
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  emptyState: {
+    backgroundColor: COLORS.surface,
+    borderRadius: BORDER_RADIUS.lg,
+    padding: SPACING.xl,
+    alignItems: "center",
+    ...SHADOWS.small,
+  },
+  emptyStateText: {
+    ...TYPOGRAPHY.body1,
+    color: COLORS.text.secondary,
   },
   appointmentCard: {
     backgroundColor: COLORS.surface,
     borderRadius: BORDER_RADIUS.lg,
-    padding: SPACING.md,
-    marginVertical: SPACING.sm,
+    padding: SPACING.lg,
     ...SHADOWS.medium,
   },
-  cardHeader: {
+  appointmentHeader: {
     flexDirection: "row",
-    alignItems: "center",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: SPACING.md,
-  },
-  doctorAvatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: SPACING.md,
   },
   doctorInfo: {
     flex: 1,
@@ -196,71 +379,88 @@ const styles = StyleSheet.create({
   doctorName: {
     ...TYPOGRAPHY.h3,
     color: COLORS.text.primary,
-    marginBottom: 2,
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 4,
   },
   specialization: {
     ...TYPOGRAPHY.body2,
     color: COLORS.text.secondary,
-    marginBottom: 2,
+    marginBottom: 8,
   },
-  status: {
+  statusContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  statusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#FFA500", // Orange color for upcoming
+    marginRight: 6,
+  },
+  statusText: {
     ...TYPOGRAPHY.caption,
-    color: COLORS.status.warning,
+    color: "#FFA500",
+    fontWeight: "500",
     textTransform: "uppercase",
   },
-  appointmentInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: SPACING.md,
+  doctorAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginLeft: SPACING.md,
   },
-  dateTime: {
+  appointmentDetails: {
+    marginBottom: SPACING.lg,
+    gap: SPACING.xs,
+  },
+  detailRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: SPACING.xs,
+  },
+  detailText: {
     ...TYPOGRAPHY.body2,
     color: COLORS.text.secondary,
   },
-  countdownContainer: {
-    backgroundColor: COLORS.background,
-    padding: SPACING.sm,
-    borderRadius: BORDER_RADIUS.sm,
-    marginBottom: SPACING.md,
-  },
-  countdown: {
-    ...TYPOGRAPHY.caption,
-    color: COLORS.text.secondary,
-    textAlign: "center",
-  },
-  actions: {
+  appointmentActions: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    gap: SPACING.sm,
+    gap: SPACING.md,
   },
   viewDetailButton: {
     flex: 1,
     borderWidth: 1,
-    borderColor: COLORS.primary,
+    borderColor: COLORS.text.disabled,
     borderRadius: BORDER_RADIUS.md,
-    paddingVertical: SPACING.sm,
+    paddingVertical: 12,
     alignItems: "center",
-    backgroundColor: "transparent",
   },
   viewDetailText: {
     ...TYPOGRAPHY.button,
-    color: COLORS.primary,
+    color: COLORS.text.primary,
+    fontWeight: "500",
   },
   joinCallButton: {
     flex: 1,
-    backgroundColor: COLORS.primary,
+    backgroundColor: "#4A7C59", 
     borderRadius: BORDER_RADIUS.md,
-    paddingVertical: SPACING.sm,
+    paddingVertical: 12,
     alignItems: "center",
   },
   joinCallText: {
     ...TYPOGRAPHY.button,
     color: COLORS.surface,
+    fontWeight: "500",
   },
-  disabledButton: {
-    backgroundColor: COLORS.text.disabled,
+  giftingSection: {
+    alignItems: "center",
+    paddingVertical: SPACING.lg,
   },
-  disabledText: {
-    color: COLORS.surface,
+  giftingText: {
+    ...TYPOGRAPHY.body1,
+    color: COLORS.text.secondary,
+    textAlign: "center",
+    fontStyle: "italic",
   },
 })

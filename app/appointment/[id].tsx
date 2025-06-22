@@ -53,7 +53,6 @@ const AppointmentDetailsScreen: React.FC = () => {
   const [showCancelDialog, setShowCancelDialog] = useState(false)
   const [isCancelled, setIsCancelled] = useState(false)
 
-  // Set cancelled state based on URL parameter
   useEffect(() => {
     if (cancelled === "true") {
       setIsCancelled(true)
@@ -130,7 +129,6 @@ const AppointmentDetailsScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Menu Items */}
         <View style={styles.menuContainer}>
           <MenuItem title="Appointment Details" onPress={() => handleMenuPress("Appointment Details")} />
           <MenuItem title="Symptoms Details" onPress={() => handleMenuPress("Symptoms Details")} />
@@ -139,7 +137,6 @@ const AppointmentDetailsScreen: React.FC = () => {
           <MenuItem title="medical Report" onPress={() => handleMenuPress("medical Report")} />
         </View>
 
-        {/* Action Buttons - Only show if not cancelled */}
         {!isCancelled && (
           <View style={styles.actionButtons}>
             <TouchableOpacity style={styles.rescheduleButton} onPress={handleReschedule}>

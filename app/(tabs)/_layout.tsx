@@ -6,41 +6,58 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.text.secondary,
+        tabBarActiveTintColor: COLORS.surface,
+        tabBarInactiveTintColor: "rgba(255, 255, 255, 0.6)",
         tabBarStyle: {
-          backgroundColor: COLORS.surface,
-          borderTopColor: COLORS.border,
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
+          backgroundColor: "#4A7C59", 
+          borderTopWidth: 0,
+          height: 70,
+          paddingBottom: 10,
+          paddingTop: 10,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
         },
         tabBarLabelStyle: {
           ...TYPOGRAPHY.caption,
           fontWeight: "500",
+          fontSize: 11,
         },
-        headerStyle: {
-          backgroundColor: COLORS.primary,
-        },
-        headerTintColor: COLORS.text.inverse,
-        headerTitleStyle: {
-          fontWeight: "600",
-        },
+        headerShown: false,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => <MaterialIcons name="home" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="home" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="store"
         options={{
-          title: "Profile",
-          tabBarIcon: ({ color, size }) => <MaterialIcons name="person" size={size} color={color} />,
+          title: "Store",
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="store" size={22} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="consult"
+        options={{
+          title: "Consult",
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="video-call" size={22} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="forum"
+        options={{
+          title: "Forum",
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="forum" size={22} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="bulletin"
+        options={{
+          title: "Bulletin",
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="article" size={22} color={color} />,
         }}
       />
     </Tabs>
