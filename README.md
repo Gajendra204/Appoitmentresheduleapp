@@ -1,50 +1,72 @@
-# Welcome to your Expo app 👋
+# Appointment Reschedule App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern, full-featured appointment booking and management app built with [Expo](https://expo.dev) and React Native. This project demonstrates a complete flow for booking, rescheduling, and cancelling appointments, including refund tracking, user profile management, and more.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Book Appointments:** Schedule appointments with doctors, select concerns, and choose available time slots.
+- **Reschedule & Cancel:** Easily reschedule or cancel appointments with reason selection and custom input.
+- **Refund Tracking:** Track refund status for cancelled appointments.
+- **User Profile:** View and edit user profile, track profile completion.
+- **Doctor Profiles:** View doctor details, experience, and ratings.
+- **Appointment Overview:** Review and edit appointment details before confirmation.
+- **Modern UI:** Clean, responsive, and accessible design with custom theming.
+- **Demo Data:** Uses mock data for doctors, appointments, and users for easy testing.
+
+## Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18 or newer recommended)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/) (optional, for global usage)
+
+### Installation
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/Gajendra204/Appoitmentresheduleapp
+   cd AppointmentRescheduleApp
+   ```
+
+2. **Install dependencies:**
 
    ```bash
    npm install
+   # or
+   yarn install
    ```
 
-2. Start the app
+3. **Start the development server:**
 
    ```bash
    npx expo start
+   # or
+   yarn expo start
    ```
 
-In the output, you'll find options to open the app in a
+4. **Run on your device:**
+   - Use the QR code in your terminal or browser to open the app in [Expo Go](https://expo.dev/go) on your mobile device.
+   - Or run on an emulator/simulator using:
+     - `npx expo start --android`
+     - `npx expo start --ios`
+     - `npx expo start --web`
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Project Structure
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- **/app**: All screens and navigation (file-based routing via Expo Router)
+- **/components**: Reusable UI components (Button, Modals, Cards, etc.)
+- **/constants**: Theme, mock data, and utility constants
+- **/contexts**: Global app context (state management)
+- **/hooks**: Custom React hooks for business logic
+- **/services**: API simulation and business logic
+- **/utils**: Validation and helper functions
 
-## Get a fresh project
+## Customization
 
-When you're ready, run:
+- **Theming:** Easily adjust colors, typography, and spacing in `/constants/theme.ts`.
+- **Mock Data:** Update `/constants/mockData.ts` to change demo doctors, users, or appointments.
+- **Navigation:** Modify `/app/_layout.tsx` and `/app/(tabs)/_layout.tsx` for navigation structure.
 
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+**Made with ❤️ using Expo, React Native, and TypeScript.**
