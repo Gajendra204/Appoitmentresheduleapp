@@ -1,19 +1,38 @@
-import type React from "react"
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView } from "react-native"
-import { useLocalSearchParams, router } from "expo-router"
-import { MaterialIcons } from "@expo/vector-icons"
-import { MOCK_APPOINTMENTS } from "../../constants/mockData"
-import { Button } from "../../components/Button"
-import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../../constants/theme"
+import { MaterialIcons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import type React from "react";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Button } from "../../components/Button";
+import { MOCK_APPOINTMENTS } from "../../constants/mockData";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  SHADOWS,
+  SPACING,
+  TYPOGRAPHY,
+} from "../../constants/theme";
+import { useApp } from "../../contexts/AppContext";
 
 interface OverviewRowProps {
-  label: string
-  value: string
-  showEdit?: boolean
-  onEdit?: () => void
+  label: string;
+  value: string;
+  showEdit?: boolean;
+  onEdit?: () => void;
 }
 
-const OverviewRow: React.FC<OverviewRowProps> = ({ label, value, showEdit, onEdit }) => (
+const OverviewRow: React.FC<OverviewRowProps> = ({
+  label,
+  value,
+  showEdit,
+  onEdit,
+}) => (
   <View style={styles.overviewRow}>
     <Text style={styles.rowLabel}>{label}</Text>
     <View style={styles.rowRight}>
@@ -25,16 +44,21 @@ const OverviewRow: React.FC<OverviewRowProps> = ({ label, value, showEdit, onEdi
       )}
     </View>
   </View>
-)
+);
 
 interface SectionProps {
-  title: string
-  showEdit?: boolean
-  onEdit?: () => void
-  children: React.ReactNode
+  title: string;
+  showEdit?: boolean;
+  onEdit?: () => void;
+  children: React.ReactNode;
 }
 
-const Section: React.FC<SectionProps> = ({ title, showEdit, onEdit, children }) => (
+const Section: React.FC<SectionProps> = ({
+  title,
+  showEdit,
+  onEdit,
+  children,
+}) => (
   <View style={styles.section}>
     <View style={styles.sectionHeader}>
       <Text style={styles.sectionTitle}>{title}</Text>
@@ -46,45 +70,63 @@ const Section: React.FC<SectionProps> = ({ title, showEdit, onEdit, children }) 
     </View>
     <View style={styles.sectionContent}>{children}</View>
   </View>
-)
+);
 
 export default function AppointmentOverviewScreen() {
-  const { id, date, time } = useLocalSearchParams<{ id: string; date: string; time: string }>()
-  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id)
+  const { id, date, time } = useLocalSearchParams<{
+    id: string;
+    date: string;
+    time: string;
+  }>();
+  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id);
+  const { state } = useApp();
+  const user = state.user;
 
   const handleEditDateTime = () => {
-    router.back()
-  }
+    router.back();
+  };
 
   const handleEditConcern = () => {
-    router.push(`/edit-concern/${id}` as any)
-  }
+    router.push(`/edit-concern/${id}` as any);
+  };
 
   const handleEditBasicInfo = () => {
-    router.push(`/edit-basic-info/${id}` as any)
-  }
+    router.push(`/edit-basic-info/${id}` as any);
+  };
 
   const handleConfirmAppointment = () => {
     if (appointment) {
-      router.push(`/appointment-confirmed/${appointment.id}?date=${date}&time=${time}`)
+      router.push(
+        `/appointment-confirmed/${appointment.id}?date=${date}&time=${time}`
+      );
     }
-  }
+  };
 
   if (!appointment) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.errorText}>Appointment not found</Text>
       </SafeAreaView>
-    )
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <MaterialIcons
+              name="arrow-back"
+              size={24}
+              color={COLORS.text.primary}
+            />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Appointment Overview</Text>
           <View style={styles.placeholder} />
@@ -92,32 +134,72 @@ export default function AppointmentOverviewScreen() {
 
         {/* Date and Time Section */}
         <Section title="Date and time" showEdit onEdit={handleEditDateTime}>
-          <OverviewRow label="Appointment Date" value="23 November 2023" />
-          <OverviewRow label="Appointment Time" value="17:28 PM" />
-          <OverviewRow label="Consultation Type" value="Video Consultation" />
+          <OverviewRow
+            label="Appointment Date"
+            value={date || appointment.date || "N/A"}
+          />
+          <OverviewRow
+            label="Appointment Time"
+            value={time || appointment.time || "N/A"}
+          />
+          <OverviewRow
+            label="Consultation Type"
+            value={
+              appointment.type === "video"
+                ? "Video Consultation"
+                : "Phone Consultation"
+            }
+          />
         </Section>
 
         {/* Concern Section */}
         <Section title="Concern" showEdit onEdit={handleEditConcern}>
-          <OverviewRow label="Concern" value="Diabetes" />
-          <OverviewRow label="Severity" value="Moderate" />
-          <OverviewRow label="How long?" value="28 days" />
+          <OverviewRow
+            label="Concern"
+            value={appointment.concern?.type || "N/A"}
+          />
+          <OverviewRow
+            label="Severity"
+            value={appointment.concern?.severity || "N/A"}
+          />
+          <OverviewRow
+            label="How long?"
+            value={
+              appointment.concern
+                ? `${appointment.concern.duration} ${appointment.concern.durationUnit}`
+                : "N/A"
+            }
+          />
         </Section>
 
         {/* Basic Information Section */}
-        <Section title="Basic information" showEdit onEdit={handleEditBasicInfo}>
-          <OverviewRow label="Gender" value="Female" />
-          <OverviewRow label="Age" value="28 years" />
-          <OverviewRow label="Weight" value="63 kg" />
+        <Section
+          title="Basic information"
+          showEdit
+          onEdit={handleEditBasicInfo}
+        >
+          <OverviewRow label="Gender" value={user?.gender || "N/A"} />
+          <OverviewRow
+            label="Age"
+            value={user?.age ? `${user.age} years` : "N/A"}
+          />
+          <OverviewRow
+            label="Weight"
+            value={user?.weight ? `${user.weight} kg` : "N/A"}
+          />
         </Section>
 
         {/* Confirm Button */}
         <View style={styles.buttonContainer}>
-          <Button title="Confirm Appointment" onPress={handleConfirmAppointment} style={styles.confirmButton} />
+          <Button
+            title="Confirm Appointment"
+            onPress={handleConfirmAppointment}
+            style={styles.confirmButton}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -212,4 +294,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: SPACING.xl,
   },
-})
+});

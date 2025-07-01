@@ -19,6 +19,13 @@ export interface Appointment {
   countdown?: string
   duration?: number
   notes?: string
+  // Add concern property to match usage in edit-concern and overview screens
+  concern?: {
+    type: string
+    severity: string
+    duration: string
+    durationUnit: string
+  }
 }
 
 import { MaterialIcons } from "@expo/vector-icons";

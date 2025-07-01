@@ -32,34 +32,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => <MaterialIcons name="home" size={22} color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="store"
-        options={{
-          title: "Store",
-          tabBarIcon: ({ color, size }) => <MaterialIcons name="store" size={22} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="consult"
-        options={{
-          title: "Consult",
-          tabBarIcon: ({ color, size }) => <MaterialIcons name="video-call" size={22} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="forum"
-        options={{
-          title: "Forum",
-          tabBarIcon: ({ color, size }) => <MaterialIcons name="forum" size={22} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="bulletin"
-        options={{
-          title: "Bulletin",
-          tabBarIcon: ({ color, size }) => <MaterialIcons name="article" size={22} color={color} />,
-        }}
-      />
+      
+     
     </Tabs>
   )
 }

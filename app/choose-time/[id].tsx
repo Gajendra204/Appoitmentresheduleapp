@@ -1,84 +1,140 @@
-"use client"
-
-import type React from "react"
-import { useState } from "react"
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, ScrollView } from "react-native"
-import { useLocalSearchParams, router } from "expo-router"
-import { MaterialIcons } from "@expo/vector-icons"
-import { MOCK_APPOINTMENTS } from "../../constants/mockData"
-import { Button } from "../../components/Button"
-import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../../constants/theme"
+import { MaterialIcons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import type React from "react";
+import { useState } from "react";
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Button } from "../../components/Button";
+import { MOCK_APPOINTMENTS } from "../../constants/mockData";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  SHADOWS,
+  SPACING,
+  TYPOGRAPHY,
+} from "../../constants/theme";
+import { useApp } from "../../contexts/AppContext";
 
 interface TimeSlotProps {
-  time: string
-  isSelected: boolean
-  isDisabled?: boolean
-  onPress: () => void
+  time: string;
+  isSelected: boolean;
+  isDisabled?: boolean;
+  onPress: () => void;
 }
 
-const TimeSlot: React.FC<TimeSlotProps> = ({ time, isSelected, isDisabled, onPress }) => (
+const TimeSlot: React.FC<TimeSlotProps> = ({
+  time,
+  isSelected,
+  isDisabled,
+  onPress,
+}) => (
   <TouchableOpacity
-    style={[styles.timeSlot, isSelected && styles.selectedTimeSlot, isDisabled && styles.disabledTimeSlot]}
+    style={[
+      styles.timeSlot,
+      isSelected && styles.selectedTimeSlot,
+      isDisabled && styles.disabledTimeSlot,
+    ]}
     onPress={onPress}
     disabled={isDisabled}
     activeOpacity={0.7}
   >
-    <Text style={[styles.timeText, isSelected && styles.selectedTimeText]}>{time}</Text>
+    <Text style={[styles.timeText, isSelected && styles.selectedTimeText]}>
+      {time}
+    </Text>
   </TouchableOpacity>
-)
+);
 
 interface TimeSlotSectionProps {
-  title: string
-  slots: string[]
-  selectedTime: string | null
-  onTimeSelect: (time: string) => void
+  title: string;
+  slots: string[];
+  selectedTime: string | null;
+  onTimeSelect: (time: string) => void;
 }
 
-const TimeSlotSection: React.FC<TimeSlotSectionProps> = ({ title, slots, selectedTime, onTimeSelect }) => (
+const TimeSlotSection: React.FC<TimeSlotSectionProps> = ({
+  title,
+  slots,
+  selectedTime,
+  onTimeSelect,
+}) => (
   <View style={styles.timeSection}>
     <Text style={styles.timeSectionTitle}>{title}</Text>
     <View style={styles.timeSlotsContainer}>
       {slots.map((time) => (
-        <TimeSlot key={time} time={time} isSelected={selectedTime === time} onPress={() => onTimeSelect(time)} />
+        <TimeSlot
+          key={time}
+          time={time}
+          isSelected={selectedTime === time}
+          onPress={() => onTimeSelect(time)}
+        />
       ))}
     </View>
   </View>
-)
+);
 
 export default function ChooseTimeScreen() {
-  const { id, date } = useLocalSearchParams<{ id: string; date: string }>()
-  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id)
-  const [selectedTime, setSelectedTime] = useState<string | null>(null)
+  const { id, date } = useLocalSearchParams<{ id: string; date: string }>();
+  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const { dispatch } = useApp();
 
-  const morningSlots = ["09:00 AM", "09:35 AM", "10:05 AM"]
-  const afternoonSlots = ["12:00 PM", "12:35 AM", "01:05 PM"]
-  const eveningSlots = ["06:00 AM", "7:00 AM", "8:05 AM"]
+  const morningSlots = ["09:00 AM", "09:35 AM", "10:05 AM"];
+  const afternoonSlots = ["12:00 PM", "12:35 AM", "01:05 PM"];
+  const eveningSlots = ["06:00 AM", "7:00 AM", "8:05 AM"];
 
   const handleTimeSelect = (time: string) => {
-    setSelectedTime(time)
-  }
+    setSelectedTime(time);
+  };
 
   const handleConfirmAppointment = () => {
     if (selectedTime && appointment && date) {
-      router.push(`/appointment-overview/${appointment.id}?date=${date}&time=${selectedTime}` as any)
+      dispatch({
+        type: "UPDATE_APPOINTMENT",
+        payload: {
+          id: appointment.id,
+          updates: {
+            time: selectedTime,
+          },
+        },
+      });
+      router.push(
+        `/appointment-overview/${appointment.id}?date=${date}&time=${selectedTime}` as any
+      );
     }
-  }
+  };
 
   if (!appointment) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.errorText}>Appointment not found</Text>
       </SafeAreaView>
-    )
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <MaterialIcons
+              name="arrow-back"
+              size={24}
+              color={COLORS.text.primary}
+            />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Choose Time Slot</Text>
           <View style={styles.placeholder} />
@@ -86,11 +142,18 @@ export default function ChooseTimeScreen() {
 
         {/* Doctor Info */}
         <View style={styles.doctorCard}>
-          <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
+          <Image
+            source={{ uri: appointment.doctor.avatar }}
+            style={styles.doctorAvatar}
+          />
           <View style={styles.doctorInfo}>
             <Text style={styles.doctorName}>Dr. Prerna</Text>
-            <Text style={styles.doctorSpecialization}>Male-Female Infertility</Text>
-            <Text style={styles.consultationType}>Chat Consultation - Free</Text>
+            <Text style={styles.doctorSpecialization}>
+              Male-Female Infertility
+            </Text>
+            <Text style={styles.consultationType}>
+              Chat Consultation - Free
+            </Text>
           </View>
         </View>
 
@@ -131,7 +194,7 @@ export default function ChooseTimeScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -252,4 +315,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: SPACING.xl,
   },
-})
+});

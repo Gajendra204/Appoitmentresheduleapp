@@ -1,56 +1,96 @@
-"use client"
-
-import type React from "react"
-import { useState } from "react"
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, ScrollView, Image } from "react-native"
-import { useLocalSearchParams, router } from "expo-router"
-import { MaterialIcons } from "@expo/vector-icons"
-import { Picker } from "@react-native-picker/picker"
-import { MOCK_APPOINTMENTS } from "../../constants/mockData"
-import { Button } from "../../components/Button"
-import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../../constants/theme"
+import { MaterialIcons } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
+import { router, useLocalSearchParams } from "expo-router";
+import type React from "react";
+import { useState } from "react";
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Button } from "../../components/Button";
+import { MOCK_APPOINTMENTS } from "../../constants/mockData";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  SHADOWS,
+  SPACING,
+  TYPOGRAPHY,
+} from "../../constants/theme";
+import { useApp } from "../../contexts/AppContext";
 
 interface SeverityOptionProps {
-  label: string
-  isSelected: boolean
-  onPress: () => void
+  label: string;
+  isSelected: boolean;
+  onPress: () => void;
 }
 
-const SeverityOption: React.FC<SeverityOptionProps> = ({ label, isSelected, onPress }) => (
+const SeverityOption: React.FC<SeverityOptionProps> = ({
+  label,
+  isSelected,
+  onPress,
+}) => (
   <TouchableOpacity
     style={[styles.severityOption, isSelected && styles.selectedSeverityOption]}
     onPress={onPress}
     activeOpacity={0.7}
   >
-    <View style={[styles.severityDot, isSelected && styles.selectedSeverityDot]} />
-    <Text style={[styles.severityText, isSelected && styles.selectedSeverityText]}>{label}</Text>
+    <View
+      style={[styles.severityDot, isSelected && styles.selectedSeverityDot]}
+    />
+    <Text
+      style={[styles.severityText, isSelected && styles.selectedSeverityText]}
+    >
+      {label}
+    </Text>
   </TouchableOpacity>
-)
+);
 
 interface DurationOptionProps {
-  label: string
-  value: string
-  isSelected: boolean
-  onPress: () => void
+  label: string;
+  value: string;
+  isSelected: boolean;
+  onPress: () => void;
 }
 
-const DurationOption: React.FC<DurationOptionProps> = ({ label, value, isSelected, onPress }) => (
-  <TouchableOpacity style={styles.durationOption} onPress={onPress} activeOpacity={0.7}>
-    <View style={[styles.radioButton, isSelected && styles.selectedRadioButton]}>
+const DurationOption: React.FC<DurationOptionProps> = ({
+  label,
+  value,
+  isSelected,
+  onPress,
+}) => (
+  <TouchableOpacity
+    style={styles.durationOption}
+    onPress={onPress}
+    activeOpacity={0.7}
+  >
+    <View
+      style={[styles.radioButton, isSelected && styles.selectedRadioButton]}
+    >
       {isSelected && <View style={styles.radioButtonInner} />}
     </View>
-    <Text style={[styles.durationText, isSelected && styles.selectedDurationText]}>{label}</Text>
+    <Text
+      style={[styles.durationText, isSelected && styles.selectedDurationText]}
+    >
+      {label}
+    </Text>
   </TouchableOpacity>
-)
+);
 
 export default function EditConcernScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>()
-  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id)
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id);
+  const { dispatch } = useApp();
 
-  const [concern, setConcern] = useState("diabetes")
-  const [severity, setSeverity] = useState("moderate")
-  const [duration, setDuration] = useState("28")
-  const [durationUnit, setDurationUnit] = useState("days")
+  const [concern, setConcern] = useState("diabetes");
+  const [severity, setSeverity] = useState("moderate");
+  const [duration, setDuration] = useState("28");
+  const [durationUnit, setDurationUnit] = useState("days");
 
   const concernOptions = [
     { label: "Please select a concern", value: "" },
@@ -60,41 +100,66 @@ export default function EditConcernScreen() {
     { label: "Anxiety", value: "anxiety" },
     { label: "Depression", value: "depression" },
     { label: "Other", value: "other" },
-  ]
+  ];
 
   const severityOptions = [
     { label: "Mild", value: "mild" },
     { label: "Moderate", value: "moderate" },
     { label: "Severe", value: "severe" },
-  ]
+  ];
 
   const durationUnits = [
     { label: "Days", value: "days" },
     { label: "Weeks", value: "weeks" },
     { label: "Months", value: "months" },
     { label: "Year", value: "year" },
-  ]
+  ];
 
   const handleProceed = () => {
-    // Save the concern info and navigate back
-    router.back()
-  }
+    if (!appointment) return; // Add this guard to satisfy TypeScript
+    // Save the concern info to context
+    dispatch({
+      type: "UPDATE_APPOINTMENT",
+      payload: {
+        id: appointment.id,
+        updates: {
+          concern: {
+            type: concern,
+            severity,
+            duration,
+            durationUnit,
+          },
+        },
+      },
+    });
+    router.back();
+  };
 
   if (!appointment) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.errorText}>Appointment not found</Text>
       </SafeAreaView>
-    )
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <MaterialIcons
+              name="arrow-back"
+              size={24}
+              color={COLORS.text.primary}
+            />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Your Concern</Text>
           <View style={styles.placeholder} />
@@ -102,10 +167,15 @@ export default function EditConcernScreen() {
 
         {/* Doctor Info Card */}
         <View style={styles.doctorCard}>
-          <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
+          <Image
+            source={{ uri: appointment.doctor.avatar }}
+            style={styles.doctorAvatar}
+          />
           <View style={styles.doctorInfo}>
             <Text style={styles.doctorName}>Dr. Prerna</Text>
-            <Text style={styles.doctorSpecialization}>Gynecology + 2 others</Text>
+            <Text style={styles.doctorSpecialization}>
+              Gynecology + 2 others
+            </Text>
             <Text style={styles.consultationType}>Instant Call - ₹ 15/min</Text>
           </View>
         </View>
@@ -122,7 +192,11 @@ export default function EditConcernScreen() {
                 dropdownIconColor={COLORS.text.secondary}
               >
                 {concernOptions.map((option) => (
-                  <Picker.Item key={option.value} label={option.label} value={option.value} />
+                  <Picker.Item
+                    key={option.value}
+                    label={option.label}
+                    value={option.value}
+                  />
                 ))}
               </Picker>
             </View>
@@ -130,7 +204,9 @@ export default function EditConcernScreen() {
 
           {/* Severity Selection */}
           <View style={styles.severitySection}>
-            <Text style={styles.sectionTitle}>Select severity of your concern</Text>
+            <Text style={styles.sectionTitle}>
+              Select severity of your concern
+            </Text>
             <View style={styles.severityContainer}>
               {severityOptions.map((option) => (
                 <SeverityOption
@@ -145,7 +221,9 @@ export default function EditConcernScreen() {
 
           {/* Duration Selection */}
           <View style={styles.durationSection}>
-            <Text style={styles.sectionTitle}>How long have you been facing?</Text>
+            <Text style={styles.sectionTitle}>
+              How long have you been facing?
+            </Text>
 
             <View style={styles.durationInputContainer}>
               <TextInput
@@ -174,11 +252,15 @@ export default function EditConcernScreen() {
 
         {/* Proceed Button */}
         <View style={styles.buttonContainer}>
-          <Button title="Proceed" onPress={handleProceed} style={styles.proceedButton} />
+          <Button
+            title="Proceed"
+            onPress={handleProceed}
+            style={styles.proceedButton}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -360,4 +442,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: SPACING.xl,
   },
-})
+});

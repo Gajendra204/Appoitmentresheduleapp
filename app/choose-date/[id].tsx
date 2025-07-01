@@ -1,40 +1,71 @@
-"use client"
-
-import type React from "react"
-import { useState } from "react"
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, ScrollView } from "react-native"
-import { useLocalSearchParams, router } from "expo-router"
-import { MaterialIcons } from "@expo/vector-icons"
-import { MOCK_APPOINTMENTS } from "../../constants/mockData"
-import { Button } from "../../components/Button"
-import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../../constants/theme"
+import { MaterialIcons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import type React from "react";
+import { useState } from "react";
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Button } from "../../components/Button";
+import { MOCK_APPOINTMENTS } from "../../constants/mockData";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  SHADOWS,
+  SPACING,
+  TYPOGRAPHY,
+} from "../../constants/theme";
+import { useApp } from "../../contexts/AppContext";
 
 interface DateItemProps {
-  date: number
-  day: string
-  month: string
-  isSelected: boolean
-  isDisabled?: boolean
-  onPress: () => void
+  date: number;
+  day: string;
+  month: string;
+  isSelected: boolean;
+  isDisabled?: boolean;
+  onPress: () => void;
 }
 
-const DateItem: React.FC<DateItemProps> = ({ date, day, month, isSelected, isDisabled, onPress }) => (
+const DateItem: React.FC<DateItemProps> = ({
+  date,
+  day,
+  month,
+  isSelected,
+  isDisabled,
+  onPress,
+}) => (
   <TouchableOpacity
-    style={[styles.dateItem, isSelected && styles.selectedDateItem, isDisabled && styles.disabledDateItem]}
+    style={[
+      styles.dateItem,
+      isSelected && styles.selectedDateItem,
+      isDisabled && styles.disabledDateItem,
+    ]}
     onPress={onPress}
     disabled={isDisabled}
     activeOpacity={0.7}
   >
-    <Text style={[styles.dateNumber, isSelected && styles.selectedDateText]}>{date.toString().padStart(2, "0")}</Text>
-    <Text style={[styles.dayText, isSelected && styles.selectedDateText]}>{day}</Text>
-    <Text style={[styles.monthText, isSelected && styles.selectedDateText]}>{month}</Text>
+    <Text style={[styles.dateNumber, isSelected && styles.selectedDateText]}>
+      {date.toString().padStart(2, "0")}
+    </Text>
+    <Text style={[styles.dayText, isSelected && styles.selectedDateText]}>
+      {day}
+    </Text>
+    <Text style={[styles.monthText, isSelected && styles.selectedDateText]}>
+      {month}
+    </Text>
   </TouchableOpacity>
-)
+);
 
 export default function ChooseDateScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>()
-  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id)
-  const [selectedDate, setSelectedDate] = useState<string | null>(null)
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const { dispatch } = useApp();
 
   // Generate calendar dates for February 2025
   const calendarDates = [
@@ -50,33 +81,52 @@ export default function ChooseDateScreen() {
     { date: 15, day: "Sunday", month: "Feb", key: "15-02-2025" },
     { date: 16, day: "Monday", month: "Feb", key: "16-02-2025" },
     { date: 17, day: "Tuesday", month: "Feb", key: "17-02-2025" },
-  ]
+  ];
 
   const handleDateSelect = (dateKey: string) => {
-    setSelectedDate(dateKey)
-  }
+    setSelectedDate(dateKey);
+  };
 
   const handleConfirmDate = () => {
     if (selectedDate && appointment) {
-      router.push(`/choose-time/${appointment.id}?date=${selectedDate}` as any)
+      dispatch({
+        type: "UPDATE_APPOINTMENT",
+        payload: {
+          id: appointment.id,
+          updates: {
+            date: selectedDate,
+          },
+        },
+      });
+      router.push(`/choose-time/${appointment.id}?date=${selectedDate}` as any);
     }
-  }
+  };
 
   if (!appointment) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.errorText}>Appointment not found</Text>
       </SafeAreaView>
-    )
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <MaterialIcons
+              name="arrow-back"
+              size={24}
+              color={COLORS.text.primary}
+            />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Choose Date</Text>
           <View style={styles.placeholder} />
@@ -84,10 +134,15 @@ export default function ChooseDateScreen() {
 
         {/* Doctor Info */}
         <View style={styles.doctorCard}>
-          <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
+          <Image
+            source={{ uri: appointment.doctor.avatar }}
+            style={styles.doctorAvatar}
+          />
           <View style={styles.doctorInfo}>
             <Text style={styles.doctorName}>Dr. Prerna</Text>
-            <Text style={styles.doctorSpecialization}>Male-Female Infertility</Text>
+            <Text style={styles.doctorSpecialization}>
+              Male-Female Infertility
+            </Text>
           </View>
         </View>
 
@@ -110,7 +165,11 @@ export default function ChooseDateScreen() {
 
         {/* Month Indicator */}
         <View style={styles.monthIndicator}>
-          <MaterialIcons name="calendar-today" size={16} color={COLORS.text.secondary} />
+          <MaterialIcons
+            name="calendar-today"
+            size={16}
+            color={COLORS.text.secondary}
+          />
           <Text style={styles.monthText}>06 February 2025</Text>
         </View>
 
@@ -125,7 +184,7 @@ export default function ChooseDateScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -248,4 +307,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: SPACING.xl,
   },
-})
+});

@@ -120,6 +120,8 @@ const initialState: AppState = {
       time: "10:30 AM",
       status: "upcoming",
       type: "video",
+
+      
       canJoin: true,
       duration: 30,
       bookingId: "APPL#10247816",

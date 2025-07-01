@@ -1,15 +1,27 @@
-"use client"
-
-import type React from "react"
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Image } from "react-native"
-import { useLocalSearchParams, router } from "expo-router"
-import { MaterialIcons } from "@expo/vector-icons"
-import { MOCK_APPOINTMENTS } from "../../constants/mockData"
-import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../../constants/theme"
+import { MaterialIcons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import type React from "react";
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { MOCK_APPOINTMENTS } from "../../constants/mockData";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  SHADOWS,
+  SPACING,
+  TYPOGRAPHY,
+} from "../../constants/theme";
 
 interface DetailRowProps {
-  label: string
-  value: string
+  label: string;
+  value: string;
 }
 
 const DetailRow: React.FC<DetailRowProps> = ({ label, value }) => (
@@ -17,53 +29,77 @@ const DetailRow: React.FC<DetailRowProps> = ({ label, value }) => (
     <Text style={styles.detailLabel}>{label}</Text>
     <Text style={styles.detailValue}>{value}</Text>
   </View>
-)
+);
 
 interface ActionButtonProps {
-  title: string
-  icon: keyof typeof MaterialIcons.glyphMap
-  onPress: () => void
-  variant?: "primary" | "danger"
+  title: string;
+  icon: keyof typeof MaterialIcons.glyphMap;
+  onPress: () => void;
+  variant?: "primary" | "danger";
 }
 
-const ActionButton: React.FC<ActionButtonProps> = ({ title, icon, onPress, variant = "primary" }) => (
+const ActionButton: React.FC<ActionButtonProps> = ({
+  title,
+  icon,
+  onPress,
+  variant = "primary",
+}) => (
   <TouchableOpacity
     style={[styles.actionButton, variant === "danger" && styles.dangerButton]}
     onPress={onPress}
     activeOpacity={0.7}
   >
-    <MaterialIcons name={icon} size={16} color={variant === "danger" ? COLORS.status.error : COLORS.primary} />
-    <Text style={[styles.actionButtonText, variant === "danger" && styles.dangerButtonText]}>{title}</Text>
+    <MaterialIcons
+      name={icon}
+      size={16}
+      color={variant === "danger" ? COLORS.status.error : COLORS.primary}
+    />
+    <Text
+      style={[
+        styles.actionButtonText,
+        variant === "danger" && styles.dangerButtonText,
+      ]}
+    >
+      {title}
+    </Text>
   </TouchableOpacity>
-)
+);
 
 interface MenuItemProps {
-  title: string
-  onPress: () => void
+  title: string;
+  onPress: () => void;
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({ title, onPress }) => (
-  <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.7}>
+  <TouchableOpacity
+    style={styles.menuItem}
+    onPress={onPress}
+    activeOpacity={0.7}
+  >
     <Text style={styles.menuItemText}>{title}</Text>
-    <MaterialIcons name="chevron-right" size={20} color={COLORS.text.disabled} />
+    <MaterialIcons
+      name="chevron-right"
+      size={20}
+      color={COLORS.text.disabled}
+    />
   </TouchableOpacity>
-)
+);
 
 export default function AppointmentDetailViewScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>()
-  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id)
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id);
 
   const handleReschedule = () => {
-    router.push(`/reschedule/${appointment?.id}`)
-  }
+    router.push(`/reschedule/${appointment?.id}`);
+  };
 
   const handleCancel = () => {
-    router.push(`/cancel-reason/${appointment?.id}`)
-  }
+    router.push(`/cancel-reason/${appointment?.id}`);
+  };
 
   const handleMenuPress = (item: string) => {
-    console.log(`${item} pressed`)
-  }
+    console.log(`${item} pressed`);
+  };
 
   if (!appointment) {
     return (
@@ -72,32 +108,58 @@ export default function AppointmentDetailViewScreen() {
           <Text style={styles.errorText}>Appointment not found</Text>
         </View>
       </SafeAreaView>
-    )
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <MaterialIcons
+              name="arrow-back"
+              size={24}
+              color={COLORS.text.primary}
+            />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Appointment</Text>
           <TouchableOpacity style={styles.menuButton}>
-            <MaterialIcons name="more-vert" size={24} color={COLORS.text.primary} />
+            <MaterialIcons
+              name="more-vert"
+              size={24}
+              color={COLORS.text.primary}
+            />
           </TouchableOpacity>
         </View>
 
         {/* Action Buttons */}
         <View style={styles.actionButtonsContainer}>
-          <ActionButton title="Reschedule Appointment" icon="schedule" onPress={handleReschedule} />
-          <ActionButton title="Cancel Appointment" icon="close" onPress={handleCancel} variant="danger" />
+          <ActionButton
+            title="Reschedule Appointment"
+            icon="schedule"
+            onPress={handleReschedule}
+          />
+          <ActionButton
+            title="Cancel Appointment"
+            icon="close"
+            onPress={handleCancel}
+            variant="danger"
+          />
         </View>
 
         {/* Doctor Card */}
         <View style={styles.doctorCard}>
-          <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
+          <Image
+            source={{ uri: appointment.doctor.avatar }}
+            style={styles.doctorAvatar}
+          />
           <View style={styles.doctorInfo}>
             <View style={styles.doctorNameRow}>
               <Text style={styles.doctorLabel}>Doctor name</Text>
@@ -110,7 +172,11 @@ export default function AppointmentDetailViewScreen() {
         <View style={styles.detailsSection}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Appointment Details</Text>
-            <MaterialIcons name="keyboard-arrow-down" size={24} color={COLORS.text.secondary} />
+            <MaterialIcons
+              name="keyboard-arrow-down"
+              size={24}
+              color={COLORS.text.secondary}
+            />
           </View>
 
           <View style={styles.detailsContainer}>
@@ -118,21 +184,34 @@ export default function AppointmentDetailViewScreen() {
             <DetailRow label="Appointment Type" value="Freemedia" />
             <DetailRow label="Appointment fee" value="0 INR" />
             <DetailRow label="Duration" value="1 min" />
-            <DetailRow label="Appointment date" value="19 Nov, 2024" />
-            <DetailRow label="Appointment time" value="01:51 PM" />
+            <DetailRow
+              label="Appointment date"
+              value={appointment.date || "N/A"}
+            />
+            <DetailRow
+              label="Appointment time"
+              value={appointment.time || "N/A"}
+            />
             <DetailRow label="Booking Status" value="Completed" />
             <DetailRow label="Routine Status" value="Not assigned" />
+            <DetailRow label="Expert" value={appointment.doctor.name} />
           </View>
         </View>
 
         {/* Additional Menu Items */}
         <View style={styles.menuContainer}>
-          <MenuItem title="Symptoms Details" onPress={() => handleMenuPress("Symptoms Details")} />
-          <MenuItem title="Coupons Details" onPress={() => handleMenuPress("Coupons Details")} />
+          <MenuItem
+            title="Symptoms Details"
+            onPress={() => handleMenuPress("Symptoms Details")}
+          />
+          <MenuItem
+            title="Coupons Details"
+            onPress={() => handleMenuPress("Coupons Details")}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -297,4 +376,4 @@ const styles = StyleSheet.create({
     ...TYPOGRAPHY.body1,
     color: COLORS.text.primary,
   },
-})
+});

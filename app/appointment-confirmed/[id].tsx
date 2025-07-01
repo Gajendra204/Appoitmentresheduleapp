@@ -69,12 +69,22 @@ export default function AppointmentConfirmedScreen() {
 
         {/* Appointment Details */}
         <View style={styles.detailsContainer}>
-          <ConfirmationRow label="Expert" value="Dr. Prerna" />
-          <ConfirmationRow label="Appointment Date" value="23 November 2023" />
-          <ConfirmationRow label="Appointment Time" value="17:28 PM" />
+          <ConfirmationRow label="Expert" value={appointment.doctor.name} />
+          <ConfirmationRow
+            label="Appointment Date"
+            value={date || appointment.date || "N/A"}
+          />
+          <ConfirmationRow
+            label="Appointment Time"
+            value={time || appointment.time || "N/A"}
+          />
           <ConfirmationRow
             label="Consultation Type"
-            value="Phone Consultation"
+            value={
+              appointment.type === "video"
+                ? "Video Consultation"
+                : "Phone Consultation"
+            }
           />
           <ConfirmationRow label="Current Wallet Balance" value="₹ 660" />
           <ConfirmationRow label="Consultation Fee" value="₹ 50" />

@@ -1,50 +1,55 @@
-"use client"
-
+import { MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  TouchableOpacity,
   Image,
   RefreshControl,
-  Dimensions,
-} from "react-native"
-import { router } from "expo-router"
-import { useState } from "react"
-import { MaterialIcons } from "@expo/vector-icons"
-import { useApp } from "../../contexts/AppContext"
-import { COLORS, TYPOGRAPHY, SPACING, SHADOWS, BORDER_RADIUS } from "../../constants/theme"
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window")
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  SHADOWS,
+  SPACING,
+  TYPOGRAPHY,
+} from "../../constants/theme";
+import { useApp } from "../../contexts/AppContext";
 
 export default function Home() {
-  const { state } = useApp()
-  const [refreshing, setRefreshing] = useState(false)
+  const { state } = useApp();
+  const [refreshing, setRefreshing] = useState(false);
 
   const handleViewAppointmentDetails = (appointmentId: string) => {
-    router.push(`/appointment/${appointmentId}`)
-  }
+    router.push(`/appointment/${appointmentId}`);
+  };
 
   const handleJoinCall = (appointmentId: string) => {
-    console.log("Joining call for appointment:", appointmentId)
-  }
+    console.log("Joining call for appointment:", appointmentId);
+  };
 
   const onRefresh = async () => {
-    setRefreshing(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setRefreshing(false)
-  }
+    setRefreshing(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setRefreshing(false);
+  };
 
-  const upcomingAppointments = state.appointments.filter((apt) => apt.status === "upcoming")
+  const upcomingAppointments = state.appointments.filter(
+    (apt) => apt.status === "upcoming"
+  );
 
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         contentContainerStyle={styles.scrollContent}
       >
         {/* Curved Header with Nature Background */}
@@ -62,10 +67,18 @@ export default function Home() {
             {/* Header Icons */}
             <View style={styles.headerIcons}>
               <TouchableOpacity style={styles.iconButton}>
-                <MaterialIcons name="shopping-bag" size={24} color={COLORS.surface} />
+                <MaterialIcons
+                  name="shopping-bag"
+                  size={24}
+                  color={COLORS.surface}
+                />
               </TouchableOpacity>
               <TouchableOpacity style={styles.iconButton}>
-                <MaterialIcons name="shopping-cart" size={24} color={COLORS.surface} />
+                <MaterialIcons
+                  name="shopping-cart"
+                  size={24}
+                  color={COLORS.surface}
+                />
               </TouchableOpacity>
               <TouchableOpacity style={styles.iconButton}>
                 <MaterialIcons name="eco" size={24} color={COLORS.surface} />
@@ -74,7 +87,9 @@ export default function Home() {
 
             {/* Greeting */}
             <View style={styles.greetingContainer}>
-              <Text style={styles.greeting}>Namaste {state.user?.name?.split(" ")[0] || "Mayank"}</Text>
+              <Text style={styles.greeting}>
+                Namaste {state.user?.name?.split(" ")[0] || "Mayank"}
+              </Text>
               <Text style={styles.subGreeting}>Welcome to Amrutam</Text>
             </View>
 
@@ -93,10 +108,13 @@ export default function Home() {
         <View style={styles.contentArea}>
           {/* Search Bar */}
           <TouchableOpacity style={styles.searchContainer}>
-            <MaterialIcons name="search" size={20} color={COLORS.text.disabled} />
+            <MaterialIcons
+              name="search"
+              size={20}
+              color={COLORS.text.disabled}
+            />
           </TouchableOpacity>
 
-          {/* Shilajit Banner */}
           <View style={styles.bannerContainer}>
             <Image
               source={{ uri: "/placeholder.svg?height=150&width=300" }}
@@ -106,7 +124,9 @@ export default function Home() {
             <View style={styles.bannerOverlay}>
               <Text style={styles.bannerTitle}>Shilajit</Text>
               <Text style={styles.bannerSubtitle}>REINVENTED</Text>
-              <Text style={styles.bannerDescription}>A wonderful blend for strength, stamina & vitality</Text>
+              <Text style={styles.bannerDescription}>
+                A wonderful blend for strength, stamina & vitality
+              </Text>
             </View>
           </View>
 
@@ -116,42 +136,72 @@ export default function Home() {
 
             {upcomingAppointments.length === 0 ? (
               <View style={styles.emptyState}>
-                <Text style={styles.emptyStateText}>No upcoming appointments</Text>
+                <Text style={styles.emptyStateText}>
+                  No upcoming appointments
+                </Text>
               </View>
             ) : (
               upcomingAppointments.slice(0, 1).map((appointment) => (
                 <View key={appointment.id} style={styles.appointmentCard}>
                   <View style={styles.appointmentHeader}>
                     <View style={styles.doctorInfo}>
-                      <Text style={styles.doctorName}>{appointment.doctor.name}</Text>
-                      <Text style={styles.specialization}>{appointment.doctor.specialization}</Text>
+                      <Text style={styles.doctorName}>
+                        {appointment.doctor.name}
+                      </Text>
+                      <Text style={styles.specialization}>
+                        {appointment.doctor.specialization}
+                      </Text>
                       <View style={styles.statusContainer}>
                         <View style={styles.statusDot} />
                         <Text style={styles.statusText}>Upcoming</Text>
                       </View>
                     </View>
-                    <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
+                    <Image
+                      source={{ uri: appointment.doctor.avatar }}
+                      style={styles.doctorAvatar}
+                    />
                   </View>
 
                   <View style={styles.appointmentDetails}>
                     <View style={styles.detailRow}>
-                      <MaterialIcons name="calendar-today" size={16} color={COLORS.text.secondary} />
-                      <Text style={styles.detailText}>Tuesday, 13/09/2023</Text>
+                      <MaterialIcons
+                        name="calendar-today"
+                        size={16}
+                        color={COLORS.text.secondary}
+                      />
+                      <Text style={styles.detailText}>
+                        {appointment.date
+                          ? `Date: ${appointment.date}`
+                          : "Date not set"}
+                      </Text>
                     </View>
                     <View style={styles.detailRow}>
-                      <MaterialIcons name="access-time" size={16} color={COLORS.text.secondary} />
-                      <Text style={styles.detailText}>10:30 AM</Text>
+                      <MaterialIcons
+                        name="access-time"
+                        size={16}
+                        color={COLORS.text.secondary}
+                      />
+                      <Text style={styles.detailText}>
+                        {appointment.time
+                          ? `Time: ${appointment.time}`
+                          : "Time not set"}
+                      </Text>
                     </View>
                   </View>
 
                   <View style={styles.appointmentActions}>
                     <TouchableOpacity
                       style={styles.viewDetailButton}
-                      onPress={() => handleViewAppointmentDetails(appointment.id)}
+                      onPress={() =>
+                        handleViewAppointmentDetails(appointment.id)
+                      }
                     >
                       <Text style={styles.viewDetailText}>View Detail</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.joinCallButton} onPress={() => handleJoinCall(appointment.id)}>
+                    <TouchableOpacity
+                      style={styles.joinCallButton}
+                      onPress={() => handleJoinCall(appointment.id)}
+                    >
                       <Text style={styles.joinCallText}>Join Call</Text>
                     </TouchableOpacity>
                   </View>
@@ -162,12 +212,14 @@ export default function Home() {
 
           {/* Special Gifting Section */}
           <View style={styles.giftingSection}>
-            <Text style={styles.giftingText}>Special Gifting options, for your special ones</Text>
+            <Text style={styles.giftingText}>
+              Special Gifting options, for your special ones
+            </Text>
           </View>
         </View>
       </ScrollView>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -443,7 +495,7 @@ const styles = StyleSheet.create({
   },
   joinCallButton: {
     flex: 1,
-    backgroundColor: "#4A7C59", 
+    backgroundColor: "#4A7C59",
     borderRadius: BORDER_RADIUS.md,
     paddingVertical: 12,
     alignItems: "center",
@@ -463,4 +515,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontStyle: "italic",
   },
-})
+});

@@ -1,44 +1,77 @@
-import type React from "react"
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Image, Alert } from "react-native"
-import { MaterialIcons } from "@expo/vector-icons"
-import { router } from "expo-router"
-import { MOCK_USER, MOCK_APPOINTMENTS } from "../../constants/mockData"
-import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../../constants/theme"
+import { MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import type React from "react";
+import {
+  Alert,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { MOCK_APPOINTMENTS, MOCK_USER } from "../../constants/mockData";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  SHADOWS,
+  SPACING,
+  TYPOGRAPHY,
+} from "../../constants/theme";
 
 interface MenuItemProps {
-  icon: keyof typeof MaterialIcons.glyphMap
-  title: string
-  onPress: () => void
-  showArrow?: boolean
+  icon: keyof typeof MaterialIcons.glyphMap;
+  title: string;
+  onPress: () => void;
+  showArrow?: boolean;
 }
 
-const MenuItem: React.FC<MenuItemProps> = ({ icon, title, onPress, showArrow = true }) => (
-  <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.7}>
+const MenuItem: React.FC<MenuItemProps> = ({
+  icon,
+  title,
+  onPress,
+  showArrow = true,
+}) => (
+  <TouchableOpacity
+    style={styles.menuItem}
+    onPress={onPress}
+    activeOpacity={0.7}
+  >
     <View style={styles.menuItemLeft}>
       <MaterialIcons name={icon} size={24} color={COLORS.text.secondary} />
       <Text style={styles.menuItemText}>{title}</Text>
     </View>
-    {showArrow && <MaterialIcons name="chevron-right" size={24} color={COLORS.text.disabled} />}
+    {showArrow && (
+      <MaterialIcons
+        name="chevron-right"
+        size={24}
+        color={COLORS.text.disabled}
+      />
+    )}
   </TouchableOpacity>
-)
+);
 
 export default function ProfileScreen() {
   const handleMenuPress = (item: string) => {
     if (item === "My Appointments") {
       // Navigate to the first appointment details
-      router.push(`/appointment/${MOCK_APPOINTMENTS[0].id}`)
+      router.push(`/appointment/${MOCK_APPOINTMENTS[0].id}`);
     } else {
-      Alert.alert("Coming Soon", `${item} feature will be available soon!`)
+      Alert.alert("Coming Soon", `${item} feature will be available soon!`);
     }
-  }
+  };
 
   const handleEditProfile = () => {
-    Alert.alert("Edit Profile", "Profile editing feature coming soon!")
-  }
+    Alert.alert("Edit Profile", "Profile editing feature coming soon!");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Profile</Text>
@@ -57,18 +90,36 @@ export default function ProfileScreen() {
         <TouchableOpacity style={styles.completionCard}>
           <View style={styles.completionContent}>
             <MaterialIcons name="person" size={20} color={COLORS.primary} />
-            <Text style={styles.completionText}>Your Profile is 60% complete</Text>
+            <Text style={styles.completionText}>
+              Your Profile is 60% complete
+            </Text>
           </View>
-          <MaterialIcons name="chevron-right" size={20} color={COLORS.text.disabled} />
+          <MaterialIcons
+            name="chevron-right"
+            size={20}
+            color={COLORS.text.disabled}
+          />
         </TouchableOpacity>
 
         {/* Menu Section */}
         <View style={styles.menuSection}>
           <Text style={styles.sectionTitle}>Ordering</Text>
           <View style={styles.menuContainer}>
-            <MenuItem icon="store" title="Store" onPress={() => handleMenuPress("Store")} />
-            <MenuItem icon="shopping-cart" title="Cart" onPress={() => handleMenuPress("Cart")} />
-            <MenuItem icon="history" title="Order History" onPress={() => handleMenuPress("Order History")} />
+            <MenuItem
+              icon="store"
+              title="Store"
+              onPress={() => handleMenuPress("Store")}
+            />
+            <MenuItem
+              icon="shopping-cart"
+              title="Cart"
+              onPress={() => handleMenuPress("Cart")}
+            />
+            <MenuItem
+              icon="history"
+              title="Order History"
+              onPress={() => handleMenuPress("Order History")}
+            />
             <MenuItem
               icon="calendar-today"
               title="My Appointments"
@@ -78,7 +129,7 @@ export default function ProfileScreen() {
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -176,4 +227,4 @@ const styles = StyleSheet.create({
     color: COLORS.text.primary,
     marginLeft: SPACING.md,
   },
-})
+});

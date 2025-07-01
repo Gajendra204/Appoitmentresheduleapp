@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet } from "react-native"
-import { Link, Stack } from "expo-router"
-import { COLORS, TYPOGRAPHY, SPACING } from "../constants/theme"
+import { Link, Stack } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
+import { COLORS, SPACING, TYPOGRAPHY } from "../constants/theme";
 
 export default function NotFoundScreen() {
   return (
@@ -8,12 +8,12 @@ export default function NotFoundScreen() {
       <Stack.Screen options={{ title: "Oops!" }} />
       <View style={styles.container}>
         <Text style={styles.title}>This screen doesn't exist.</Text>
-        <Link href="/" style={styles.link}>
+        <Link href="/(tabs)" style={styles.link}>
           <Text style={styles.linkText}>Go to home screen!</Text>
         </Link>
       </View>
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -38,4 +38,4 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: "600",
   },
-})
+});
