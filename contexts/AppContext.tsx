@@ -1,7 +1,8 @@
 "use client"
 
 import type React from "react"
-import { createContext, useContext, useReducer, type ReactNode } from "react"
+import { createContext, useContext, useReducer, type ReactNode } from "react"
+
 export interface User {
   id: string
   name: string
@@ -64,14 +65,16 @@ export interface RefundInfo {
   requestedAt: string
   processedAt?: string
   completedAt?: string
-}
+}
+
 interface AppState {
   user: User | null
   appointments: Appointment[]
   doctors: Doctor[]
   loading: boolean
   error: string | null
-}
+}
+
 type AppAction =
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
@@ -82,7 +85,8 @@ type AppAction =
   | { type: "UPDATE_APPOINTMENT"; payload: { id: string; updates: Partial<Appointment> } }
   | { type: "CANCEL_APPOINTMENT"; payload: { id: string; reason: string } }
   | { type: "SET_DOCTORS"; payload: Doctor[] }
-  | { type: "PROCESS_REFUND"; payload: { appointmentId: string; refund: RefundInfo } }
+  | { type: "PROCESS_REFUND"; payload: { appointmentId: string; refund: RefundInfo } }
+
 const initialState: AppState = {
   user: {
     id: "1",
@@ -103,7 +107,7 @@ const initialState: AppState = {
         id: "1",
         name: "Dr. Deepa Godara",
         specialization: "Orthodontist",
-        avatar: "/placeholder.svg?height=100&width=100",
+        avatar: "/",
         rating: 4.8,
         experience: "8+ years",
         fee: 500,
@@ -125,7 +129,7 @@ const initialState: AppState = {
       id: "1",
       name: "Dr. Deepa Godara",
       specialization: "Orthodontist",
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "/",
       rating: 4.8,
       experience: "8+ years",
       fee: 500,
@@ -133,7 +137,8 @@ const initialState: AppState = {
   ],
   loading: false,
   error: null,
-}
+}
+
 function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case "SET_LOADING":
@@ -203,16 +208,19 @@ function appReducer(state: AppState, action: AppAction): AppState {
     default:
       return state
   }
-}
+}
+
 const AppContext = createContext<{
   state: AppState
   dispatch: React.Dispatch<AppAction>
-} | null>(null)
+} | null>(null)
+
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState)
 
   return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>
-}
+}
+
 export function useApp() {
   const context = useContext(AppContext)
   if (!context) {

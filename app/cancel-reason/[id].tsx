@@ -1,81 +1,125 @@
-import type React from "react"
-import { useState } from "react"
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Image } from "react-native"
-import { useLocalSearchParams, router } from "expo-router"
-import { MaterialIcons } from "@expo/vector-icons"
-import { MOCK_APPOINTMENTS } from "../../constants/mockData"
-import { OtherReasonModal } from "../../components/OtherReasonModal"
-import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../../constants/theme"
+import { MaterialIcons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import type React from "react";
+import { useState } from "react";
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { OtherReasonModal } from "../../components/OtherReasonModal";
+import { MOCK_APPOINTMENTS } from "../../constants/mockData";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  SHADOWS,
+  SPACING,
+  TYPOGRAPHY,
+} from "../../constants/theme";
 
 interface ReasonOptionProps {
-  icon: keyof typeof MaterialIcons.glyphMap
-  title: string
-  isSelected: boolean
-  onSelect: () => void
+  icon: keyof typeof MaterialIcons.glyphMap;
+  title: string;
+  isSelected: boolean;
+  onSelect: () => void;
 }
 
-const ReasonOption: React.FC<ReasonOptionProps> = ({ icon, title, isSelected, onSelect }) => (
-  <TouchableOpacity style={styles.reasonOption} onPress={onSelect} activeOpacity={0.7}>
+const ReasonOption: React.FC<ReasonOptionProps> = ({
+  icon,
+  title,
+  isSelected,
+  onSelect,
+}) => (
+  <TouchableOpacity
+    style={styles.reasonOption}
+    onPress={onSelect}
+    activeOpacity={0.7}
+  >
     <View style={styles.reasonContent}>
-      <MaterialIcons name={icon} size={20} color={COLORS.text.secondary} style={styles.reasonIcon} />
+      <MaterialIcons
+        name={icon}
+        size={20}
+        color={COLORS.text.secondary}
+        style={styles.reasonIcon}
+      />
       <Text style={styles.reasonText}>{title}</Text>
     </View>
-    <View style={[styles.radioButton, isSelected && styles.selectedRadioButton]}>
+    <View
+      style={[styles.radioButton, isSelected && styles.selectedRadioButton]}
+    >
       {isSelected && <View style={styles.radioButtonInner} />}
     </View>
   </TouchableOpacity>
-)
+);
 
 export default function CancelReasonScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>()
-  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id)
-  const [selectedReason, setSelectedReason] = useState<string | null>(null)
-  const [customReason, setCustomReason] = useState<string>("")
-  const [showOtherModal, setShowOtherModal] = useState(false)
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id);
+  const [selectedReason, setSelectedReason] = useState<string | null>(null);
+  const [customReason, setCustomReason] = useState<string>("");
+  const [showOtherModal, setShowOtherModal] = useState(false);
 
   const reasons = [
     { id: "emergency", title: "Emergency work", icon: "work" as const },
     { id: "internet", title: "Internet issues", icon: "wifi-off" as const },
-    { id: "scheduling", title: "Scheduling conflict", icon: "schedule" as const },
+    {
+      id: "scheduling",
+      title: "Scheduling conflict",
+      icon: "schedule" as const,
+    },
     { id: "other", title: "Other", icon: "more-horiz" as const },
-  ]
+  ];
 
   const handleReasonSelect = (reasonId: string) => {
     if (reasonId === "other") {
-      setShowOtherModal(true)
+      setShowOtherModal(true);
     } else {
-      setSelectedReason(reasonId)
-      setCustomReason("")
+      setSelectedReason(reasonId);
+      setCustomReason("");
     }
-  }
+  };
 
   const handleOtherReasonSave = (reason: string) => {
-    setCustomReason(reason)
-    setSelectedReason("other")
-    setShowOtherModal(false)
-  }
+    setCustomReason(reason);
+    setSelectedReason("other");
+    setShowOtherModal(false);
+  };
 
   const handleSkip = () => {
     if (selectedReason) {
-      router.push(`/appointment-cancelled/${appointment?.id}` as any)
+      router.push(`/appointment-cancelled/${appointment?.id}` as any);
     }
-  }
+  };
 
   if (!appointment) {
     return (
       <SafeAreaView style={styles.container}>
         <Text style={styles.errorText}>Appointment not found</Text>
       </SafeAreaView>
-    )
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <MaterialIcons
+              name="arrow-back"
+              size={24}
+              color={COLORS.text.primary}
+            />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Appointment Details</Text>
           <View style={styles.placeholder} />
@@ -83,16 +127,23 @@ export default function CancelReasonScreen() {
 
         {}
         <View style={styles.doctorCard}>
-          <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
+          <Image
+            source={{ uri: appointment.doctor.avatar }}
+            style={styles.doctorAvatar}
+          />
           <View style={styles.doctorInfo}>
-            <Text style={styles.doctorName}>Dr. Deepa Godara</Text>
-            <Text style={styles.doctorSpecialization}>Orthodontist</Text>
+            <Text style={styles.doctorName}>{appointment.doctor.name}</Text>
+            <Text style={styles.doctorSpecialization}>
+              {appointment.doctor.specialization}
+            </Text>
           </View>
         </View>
 
         {}
         <View style={styles.reasonSection}>
-          <Text style={styles.sectionTitle}>Please select reason for cancellation</Text>
+          <Text style={styles.sectionTitle}>
+            Please select reason for cancellation
+          </Text>
 
           <View style={styles.reasonsList}>
             {reasons.map((reason) => (
@@ -117,11 +168,21 @@ export default function CancelReasonScreen() {
         {}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.skipButton, !selectedReason && styles.disabledButton]}
+            style={[
+              styles.skipButton,
+              !selectedReason && styles.disabledButton,
+            ]}
             onPress={handleSkip}
             disabled={!selectedReason}
           >
-            <Text style={[styles.skipButtonText, !selectedReason && styles.disabledButtonText]}>Skip</Text>
+            <Text
+              style={[
+                styles.skipButtonText,
+                !selectedReason && styles.disabledButtonText,
+              ]}
+            >
+              Cancel
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -133,7 +194,7 @@ export default function CancelReasonScreen() {
         onSave={handleOtherReasonSave}
       />
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -283,4 +344,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: SPACING.xl,
   },
-})
+});

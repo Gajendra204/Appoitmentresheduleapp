@@ -1,4 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { Stack } from "expo-router";
 import { router } from "expo-router";
 import type React from "react";
 import {
@@ -25,7 +26,7 @@ interface MenuItemProps {
   title: string;
   onPress: () => void;
   showArrow?: boolean;
-}
+  }
 
 const MenuItem: React.FC<MenuItemProps> = ({
   icon,
@@ -54,7 +55,8 @@ const MenuItem: React.FC<MenuItemProps> = ({
 
 export default function ProfileScreen() {
   const handleMenuPress = (item: string) => {
-    if (item === "My Appointments") {
+    if (item === "My Appointments") {
+
       router.push(`/appointment/${MOCK_APPOINTMENTS[0].id}`);
     } else {
       Alert.alert("Coming Soon", `${item} feature will be available soon!`);
@@ -66,7 +68,16 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <>
+      <Stack.Screen
+        options={{
+          title: "Profile",
+          headerRight: () => (
+            <MaterialIcons name="person" size={28} color={COLORS.primary} style={{ marginRight: 16 }} />
+          ),
+        }}
+      />
+      <SafeAreaView style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -127,8 +138,9 @@ export default function ProfileScreen() {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    </>
+  )
 }
 
 const styles = StyleSheet.create({
