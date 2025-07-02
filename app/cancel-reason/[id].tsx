@@ -72,7 +72,7 @@ export default function CancelReasonScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
@@ -81,7 +81,7 @@ export default function CancelReasonScreen() {
           <View style={styles.placeholder} />
         </View>
 
-        {/* Doctor Card */}
+        {}
         <View style={styles.doctorCard}>
           <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
           <View style={styles.doctorInfo}>
@@ -90,7 +90,7 @@ export default function CancelReasonScreen() {
           </View>
         </View>
 
-        {/* Reason Selection */}
+        {}
         <View style={styles.reasonSection}>
           <Text style={styles.sectionTitle}>Please select reason for cancellation</Text>
 
@@ -114,7 +114,7 @@ export default function CancelReasonScreen() {
           )}
         </View>
 
-        {/* Skip Button */}
+        {}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.skipButton, !selectedReason && styles.disabledButton]}
@@ -126,7 +126,7 @@ export default function CancelReasonScreen() {
         </View>
       </ScrollView>
 
-      {/* Other Reason Modal */}
+      {}
       <OtherReasonModal
         visible={showOtherModal}
         onClose={() => setShowOtherModal(false)}

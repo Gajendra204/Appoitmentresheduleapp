@@ -116,8 +116,7 @@ export default function EditConcernScreen() {
   ];
 
   const handleProceed = () => {
-    if (!appointment) return; // Add this guard to satisfy TypeScript
-    // Save the concern info to context
+    if (!appointment) return; // Add this guard to satisfy TypeScript
     dispatch({
       type: "UPDATE_APPOINTMENT",
       payload: {
@@ -149,7 +148,7 @@ export default function EditConcernScreen() {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => router.back()}
@@ -165,7 +164,7 @@ export default function EditConcernScreen() {
           <View style={styles.placeholder} />
         </View>
 
-        {/* Doctor Info Card */}
+        {}
         <View style={styles.doctorCard}>
           <Image
             source={{ uri: appointment.doctor.avatar }}
@@ -180,9 +179,9 @@ export default function EditConcernScreen() {
           </View>
         </View>
 
-        {/* Form Section */}
+        {}
         <View style={styles.formSection}>
-          {/* Concern Selection */}
+          {}
           <View style={styles.inputContainer}>
             <View style={styles.pickerContainer}>
               <Picker
@@ -202,7 +201,7 @@ export default function EditConcernScreen() {
             </View>
           </View>
 
-          {/* Severity Selection */}
+          {}
           <View style={styles.severitySection}>
             <Text style={styles.sectionTitle}>
               Select severity of your concern
@@ -219,7 +218,7 @@ export default function EditConcernScreen() {
             </View>
           </View>
 
-          {/* Duration Selection */}
+          {}
           <View style={styles.durationSection}>
             <Text style={styles.sectionTitle}>
               How long have you been facing?
@@ -250,7 +249,7 @@ export default function EditConcernScreen() {
           </View>
         </View>
 
-        {/* Proceed Button */}
+        {}
         <View style={styles.buttonContainer}>
           <Button
             title="Proceed"
@@ -355,8 +354,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
   },
-  selectedSeverityOption: {
-    // Additional styling for selected state if needed
+  selectedSeverityOption: {
   },
   severityDot: {
     width: 12,

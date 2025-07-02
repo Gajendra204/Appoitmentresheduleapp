@@ -38,7 +38,7 @@ export const ProfileScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Profile Header */}
+        {}
         <View style={styles.profileHeader}>
           <View style={styles.avatarContainer}>
             <Image source={{ uri: MOCK_USER.avatar }} style={styles.avatar} />
@@ -50,7 +50,7 @@ export const ProfileScreen = () => {
           <Text style={styles.userPhone}>{MOCK_USER.phone}</Text>
         </View>
 
-        {/* Profile Completion */}
+        {}
         <View style={styles.completionCard}>
           <View style={styles.completionHeader}>
             <MaterialIcons name="person" size={20} color={COLORS.primary} />
@@ -62,7 +62,7 @@ export const ProfileScreen = () => {
           </View>
         </View>
 
-        {/* Menu Section */}
+        {}
         <View style={styles.menuSection}>
           <Text style={styles.sectionTitle}>Ordering</Text>
           <View style={styles.menuContainer}>
@@ -77,7 +77,7 @@ export const ProfileScreen = () => {
           </View>
         </View>
 
-        {/* Additional Options */}
+        {}
         <View style={styles.menuSection}>
           <Text style={styles.sectionTitle}>Account</Text>
           <View style={styles.menuContainer}>

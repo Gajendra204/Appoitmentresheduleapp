@@ -1,9 +1,7 @@
 "use client"
 
 import type React from "react"
-import { createContext, useContext, useReducer, type ReactNode } from "react"
-
-// Types
+import { createContext, useContext, useReducer, type ReactNode } from "react"
 export interface User {
   id: string
   name: string
@@ -66,18 +64,14 @@ export interface RefundInfo {
   requestedAt: string
   processedAt?: string
   completedAt?: string
-}
-
-// State
+}
 interface AppState {
   user: User | null
   appointments: Appointment[]
   doctors: Doctor[]
   loading: boolean
   error: string | null
-}
-
-// Actions
+}
 type AppAction =
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_ERROR"; payload: string | null }
@@ -88,9 +82,7 @@ type AppAction =
   | { type: "UPDATE_APPOINTMENT"; payload: { id: string; updates: Partial<Appointment> } }
   | { type: "CANCEL_APPOINTMENT"; payload: { id: string; reason: string } }
   | { type: "SET_DOCTORS"; payload: Doctor[] }
-  | { type: "PROCESS_REFUND"; payload: { appointmentId: string; refund: RefundInfo } }
-
-// Initial State
+  | { type: "PROCESS_REFUND"; payload: { appointmentId: string; refund: RefundInfo } }
 const initialState: AppState = {
   user: {
     id: "1",
@@ -141,9 +133,7 @@ const initialState: AppState = {
   ],
   loading: false,
   error: null,
-}
-
-// Reducer
+}
 function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case "SET_LOADING":
@@ -213,22 +203,16 @@ function appReducer(state: AppState, action: AppAction): AppState {
     default:
       return state
   }
-}
-
-// Context
+}
 const AppContext = createContext<{
   state: AppState
   dispatch: React.Dispatch<AppAction>
-} | null>(null)
-
-// Provider
+} | null>(null)
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState)
 
   return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>
-}
-
-// Hook
+}
 export function useApp() {
   const context = useContext(AppContext)
   if (!context) {

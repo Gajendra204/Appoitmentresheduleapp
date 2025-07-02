@@ -1,6 +1,4 @@
-import type { Appointment, RefundInfo } from "../contexts/AppContext"
-
-// Simulate API delays
+import type { Appointment, RefundInfo } from "../contexts/AppContext"
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export class AppointmentService {
@@ -13,9 +11,8 @@ export class AppointmentService {
     symptoms?: string[]
     userInfo?: any
   }): Promise<Appointment> {
-    await delay(2000) // Simulate API call
-
-    // Simulate random booking failure (10% chance)
+    await delay(2000) 
+    
     if (Math.random() < 0.1) {
       throw new Error("Booking failed. Please try again.")
     }
@@ -54,7 +51,6 @@ export class AppointmentService {
   ): Promise<void> {
     await delay(1500)
 
-    // Simulate random reschedule failure (5% chance)
     if (Math.random() < 0.05) {
       throw new Error("Reschedule failed. Please try again.")
     }
@@ -63,7 +59,6 @@ export class AppointmentService {
   static async cancelAppointment(appointmentId: string, reason: string): Promise<void> {
     await delay(1000)
 
-    // Simulate random cancellation failure (2% chance)
     if (Math.random() < 0.02) {
       throw new Error("Cancellation failed. Please try again.")
     }
@@ -87,12 +82,10 @@ export class AppointmentService {
   static async getAvailableSlots(doctorId: string, date: string): Promise<string[]> {
     await delay(800)
 
-    // Generate available time slots
     const morningSlots = ["09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM"]
     const afternoonSlots = ["02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM"]
     const eveningSlots = ["06:00 PM", "06:30 PM", "07:00 PM", "07:30 PM", "08:00 PM"]
 
-    // Randomly make some slots unavailable
     const allSlots = [...morningSlots, ...afternoonSlots, ...eveningSlots]
     return allSlots.filter(() => Math.random() > 0.3) // 70% availability
   }

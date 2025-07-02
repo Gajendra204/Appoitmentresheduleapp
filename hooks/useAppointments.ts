@@ -13,7 +13,6 @@ export const useAppointments = () => {
     const fetchAppointments = async () => {
       try {
         setLoading(true)
-        // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1000))
         setAppointments(MOCK_APPOINTMENTS)
       } catch (err) {

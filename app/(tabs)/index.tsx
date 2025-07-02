@@ -52,10 +52,10 @@ export default function Home() {
         }
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Curved Header with Nature Background */}
+        {}
         <View style={styles.headerContainer}>
           <View style={styles.curvedHeader}>
-            {/* Status Bar Area */}
+            {}
             <SafeAreaView>
               <View style={styles.statusBarContent}>
                 <View style={styles.statusIcons}>
@@ -64,7 +64,7 @@ export default function Home() {
               </View>
             </SafeAreaView>
 
-            {/* Header Icons */}
+            {}
             <View style={styles.headerIcons}>
               <TouchableOpacity style={styles.iconButton}>
                 <MaterialIcons
@@ -85,7 +85,7 @@ export default function Home() {
               </TouchableOpacity>
             </View>
 
-            {/* Greeting */}
+            {}
             <View style={styles.greetingContainer}>
               <Text style={styles.greeting}>
                 Namaste {state.user?.name?.split(" ")[0] || "Mayank"}
@@ -93,9 +93,9 @@ export default function Home() {
               <Text style={styles.subGreeting}>Welcome to Amrutam</Text>
             </View>
 
-            {/* Nature Illustrations */}
+            {}
             <View style={styles.natureIllustrations}>
-              {/* Trees and landscape elements */}
+              {}
               <View style={styles.tree1} />
               <View style={styles.tree2} />
               <View style={styles.mountain1} />
@@ -104,9 +104,9 @@ export default function Home() {
           </View>
         </View>
 
-        {/* Content Area */}
+        {}
         <View style={styles.contentArea}>
-          {/* Search Bar */}
+          {}
           <TouchableOpacity style={styles.searchContainer}>
             <MaterialIcons
               name="search"
@@ -130,7 +130,7 @@ export default function Home() {
             </View>
           </View>
 
-          {/* Upcoming Appointment Section */}
+          {}
           <View style={styles.appointmentSection}>
             <Text style={styles.sectionTitle}>Upcoming Appointment</Text>
 
@@ -210,7 +210,7 @@ export default function Home() {
             )}
           </View>
 
-          {/* Special Gifting Section */}
+          {}
           <View style={styles.giftingSection}>
             <Text style={styles.giftingText}>
               Special Gifting options, for your special ones

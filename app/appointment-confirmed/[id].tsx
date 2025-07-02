@@ -48,7 +48,7 @@ export default function AppointmentConfirmedScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Success Icon */}
+        {}
         <View style={styles.successContainer}>
           <View style={styles.successIcon}>
             <MaterialIcons name="check" size={60} color={COLORS.surface} />
@@ -59,7 +59,7 @@ export default function AppointmentConfirmedScreen() {
           />
         </View>
 
-        {/* Success Message */}
+        {}
         <View style={styles.messageContainer}>
           <Text style={styles.successTitle}>Appointment Confirmed</Text>
           <Text style={styles.successSubtitle}>
@@ -67,7 +67,7 @@ export default function AppointmentConfirmedScreen() {
           </Text>
         </View>
 
-        {/* Appointment Details */}
+        {}
         <View style={styles.detailsContainer}>
           <ConfirmationRow label="Expert" value={appointment.doctor.name} />
           <ConfirmationRow
@@ -90,7 +90,7 @@ export default function AppointmentConfirmedScreen() {
           <ConfirmationRow label="Consultation Fee" value="₹ 50" />
         </View>
 
-        {/* Got It Button */}
+        {}
         <View style={styles.buttonContainer}>
           <Button
             title="Got it"

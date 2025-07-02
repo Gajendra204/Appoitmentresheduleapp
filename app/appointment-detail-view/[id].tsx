@@ -117,7 +117,7 @@ export default function AppointmentDetailViewScreen() {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => router.back()}
@@ -139,7 +139,7 @@ export default function AppointmentDetailViewScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Action Buttons */}
+        {}
         <View style={styles.actionButtonsContainer}>
           <ActionButton
             title="Reschedule Appointment"
@@ -154,7 +154,7 @@ export default function AppointmentDetailViewScreen() {
           />
         </View>
 
-        {/* Doctor Card */}
+        {}
         <View style={styles.doctorCard}>
           <Image
             source={{ uri: appointment.doctor.avatar }}
@@ -168,7 +168,7 @@ export default function AppointmentDetailViewScreen() {
           </View>
         </View>
 
-        {/* Appointment Details */}
+        {}
         <View style={styles.detailsSection}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Appointment Details</Text>
@@ -198,7 +198,7 @@ export default function AppointmentDetailViewScreen() {
           </View>
         </View>
 
-        {/* Additional Menu Items */}
+        {}
         <View style={styles.menuContainer}>
           <MenuItem
             title="Symptoms Details"

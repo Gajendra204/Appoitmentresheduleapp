@@ -115,7 +115,7 @@ export default function AppointmentOverviewScreen() {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => router.back()}
@@ -131,7 +131,7 @@ export default function AppointmentOverviewScreen() {
           <View style={styles.placeholder} />
         </View>
 
-        {/* Date and Time Section */}
+        {}
         <Section title="Date and time" showEdit onEdit={handleEditDateTime}>
           <OverviewRow
             label="Appointment Date"
@@ -151,7 +151,7 @@ export default function AppointmentOverviewScreen() {
           />
         </Section>
 
-        {/* Concern Section */}
+        {}
         <Section title="Concern" showEdit onEdit={handleEditConcern}>
           <OverviewRow
             label="Concern"
@@ -171,7 +171,7 @@ export default function AppointmentOverviewScreen() {
           />
         </Section>
 
-        {/* Basic Information Section */}
+        {}
         <Section
           title="Basic information"
           showEdit
@@ -188,7 +188,7 @@ export default function AppointmentOverviewScreen() {
           />
         </Section>
 
-        {/* Confirm Button */}
+        {}
         <View style={styles.buttonContainer}>
           <Button
             title="Confirm Appointment"

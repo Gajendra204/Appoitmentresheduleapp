@@ -7,22 +7,16 @@ export const COLORS = {
   primaryDark: "#388E3C",
   primaryLight: "#C8E6C9",
   secondary: "#FFC107",
-  secondaryDark: "#F57C00",
-
-  // Background colors
+  secondaryDark: "#F57C00",
   background: "#F8F9FA",
   surface: "#FFFFFF",
-  card: "#FFFFFF",
-
-  // Text colors
+  card: "#FFFFFF",
   text: {
     primary: "#212121",
     secondary: "#757575",
     disabled: "#BDBDBD",
     inverse: "#FFFFFF",
-  },
-
-  // Status colors
+  },
   status: {
     success: "#4CAF50",
     warning: "#FF9800",

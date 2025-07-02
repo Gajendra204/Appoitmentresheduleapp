@@ -20,7 +20,7 @@ export const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <View>
             <Text style={styles.greeting}>Namaste Mayank</Text>
@@ -31,17 +31,17 @@ export const HomeScreen = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Search Bar */}
+        {}
         <TouchableOpacity style={styles.searchContainer}>
           <Text style={styles.searchPlaceholder}>🔍 Search</Text>
         </TouchableOpacity>
 
-        {/* Banner */}
+        {}
         <View style={styles.banner}>
           <Text style={styles.bannerText}>Special Gifting options for your special ones</Text>
         </View>
 
-        {/* Upcoming Appointments Section */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Upcoming Appointment</Text>
           {MOCK_APPOINTMENTS.map((appointment) => (

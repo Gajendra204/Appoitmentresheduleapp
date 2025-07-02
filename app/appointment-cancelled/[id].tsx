@@ -7,29 +7,28 @@ import { COLORS, TYPOGRAPHY, SPACING } from "../../constants/theme"
 export default function AppointmentCancelledScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
 
-  const handleGotIt = () => {
-    // Navigate back to appointment details with cancelled state
+  const handleGotIt = () => {
     router.replace(`/appointment/${id}?cancelled=true`)
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        {/* Success Icon */}
+        {}
         <View style={styles.iconContainer}>
           <View style={styles.walletIcon}>
             <MaterialIcons name="account-balance-wallet" size={60} color={COLORS.primary} />
           </View>
         </View>
 
-        {/* Success Message */}
+        {}
         <View style={styles.messageContainer}>
           <Text style={styles.title}>Appointment cancelled</Text>
           <Text style={styles.subtitle}>A refund will be initiated to your wallet within a few days.</Text>
           <Text style={styles.thankYou}>Thank you for your patience!</Text>
         </View>
 
-        {/* Got It Button */}
+        {}
         <View style={styles.buttonContainer}>
           <Button title="Got it" onPress={handleGotIt} style={styles.gotItButton} />
         </View>

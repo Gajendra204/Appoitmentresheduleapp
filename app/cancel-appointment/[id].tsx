@@ -65,8 +65,7 @@ export default function CancelAppointmentScreen() {
           style: "destructive",
           onPress: async () => {
             setIsLoading(true)
-            try {
-              // Simulate API call
+            try {
               await new Promise((resolve) => setTimeout(resolve, 2000))
 
               Alert.alert(
@@ -108,7 +107,7 @@ export default function CancelAppointmentScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
@@ -117,7 +116,7 @@ export default function CancelAppointmentScreen() {
           <View style={styles.placeholder} />
         </View>
 
-        {/* Doctor Info */}
+        {}
         <View style={styles.doctorCard}>
           <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
           <View style={styles.doctorInfo}>
@@ -127,7 +126,7 @@ export default function CancelAppointmentScreen() {
           </View>
         </View>
 
-        {/* Cancellation Notice */}
+        {}
         <View style={styles.noticeCard}>
           <MaterialIcons name="info" size={24} color={COLORS.status.warning} />
           <View style={styles.noticeContent}>
@@ -139,7 +138,7 @@ export default function CancelAppointmentScreen() {
           </View>
         </View>
 
-        {/* Reason Selection */}
+        {}
         <View style={styles.reasonSection}>
           <Text style={styles.sectionTitle}>Please select reason for cancellation</Text>
           <Text style={styles.sectionSubtitle}>This will help us improve our services</Text>
@@ -156,7 +155,7 @@ export default function CancelAppointmentScreen() {
           </View>
         </View>
 
-        {/* Action Buttons */}
+        {}
         <View style={styles.actionButtons}>
           <Button
             title="Cancel Appointment"

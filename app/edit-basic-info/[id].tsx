@@ -131,7 +131,7 @@ export default function EditBasicInfoScreen() {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => router.back()}
@@ -147,7 +147,7 @@ export default function EditBasicInfoScreen() {
           <View style={styles.placeholder} />
         </View>
 
-        {/* Doctor Info Card */}
+        {}
         <View style={styles.doctorCard}>
           <Image
             source={{ uri: appointment.doctor.avatar }}
@@ -162,7 +162,7 @@ export default function EditBasicInfoScreen() {
           </View>
         </View>
 
-        {/* Form Section */}
+        {}
         <View style={styles.formSection}>
           <Text style={styles.formTitle}>
             Please confirm your basic information
@@ -200,7 +200,7 @@ export default function EditBasicInfoScreen() {
           />
         </View>
 
-        {/* Confirm Button */}
+        {}
         <View style={styles.buttonContainer}>
           <Button
             title="Confirm"

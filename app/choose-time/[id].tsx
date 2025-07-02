@@ -124,7 +124,7 @@ export default function ChooseTimeScreen() {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => router.back()}
@@ -140,7 +140,7 @@ export default function ChooseTimeScreen() {
           <View style={styles.placeholder} />
         </View>
 
-        {/* Doctor Info */}
+        {}
         <View style={styles.doctorCard}>
           <Image
             source={{ uri: appointment.doctor.avatar }}
@@ -157,7 +157,7 @@ export default function ChooseTimeScreen() {
           </View>
         </View>
 
-        {/* Time Selection */}
+        {}
         <View style={styles.timeSelectionSection}>
           <Text style={styles.sectionTitle}>Pick a time slot</Text>
 
@@ -183,7 +183,7 @@ export default function ChooseTimeScreen() {
           />
         </View>
 
-        {/* Confirm Button */}
+        {}
         <View style={styles.buttonContainer}>
           <Button
             title="Confirm Appointment"

@@ -99,7 +99,7 @@ const AppointmentDetailsScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
@@ -108,7 +108,7 @@ const AppointmentDetailsScreen: React.FC = () => {
           <View style={styles.placeholder} />
         </View>
 
-        {/* Doctor Card */}
+        {}
         <View style={styles.doctorCard}>
           <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
           <View style={styles.doctorInfo}>
@@ -147,7 +147,7 @@ const AppointmentDetailsScreen: React.FC = () => {
         )}
       </ScrollView>
 
-      {/* Cancel Dialog */}
+      {}
       <CancelDialog visible={showCancelDialog} onCancel={handleCancelDialogClose} onConfirm={handleCancelConfirm} />
     </SafeAreaView>
   )

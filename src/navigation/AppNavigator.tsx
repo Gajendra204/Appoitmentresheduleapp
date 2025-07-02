@@ -6,14 +6,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { RootStackParamList } from '../../constants/types';
 import { HomeScreen } from '../../screens/HomeScreen';
 import { ProfileScreen } from '../../screens/ProfileScreen';
-import { AppointmentDetailsScreen } from '../../screens/AppointmentDetailsScreen';
-// import { RescheduleReasonScreen } from '../screens/RescheduleReasonScreen';
+import { AppointmentDetailsScreen } from '../../screens/AppointmentDetailsScreen';
 import { COLORS, TYPOGRAPHY } from '../../constants/theme';
 
 const Stack = createStackNavigator<RootStackParamList>();
-const Tab = createBottomTabNavigator();
-
-// Bottom Tab Navigator
+const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
   return (
     <Tab.Navigator
@@ -59,9 +56,7 @@ const TabNavigator = () => {
       />
     </Tab.Navigator>
   );
-};
-
-// Main Stack Navigator
+};
 export const AppNavigator = () => {
   return (
     <Stack.Navigator
@@ -94,14 +89,7 @@ export const AppNavigator = () => {
           headerShown: true,
         }}
       />
-      {/* <Stack.Screen 
-        name="RescheduleReason" 
-        component={RescheduleReasonScreen}
-        options={{ 
-          title: 'Reschedule Reason',
-          headerShown: true,
-        }}
-      /> */}
+      {}
     </Stack.Navigator>
   );
 };

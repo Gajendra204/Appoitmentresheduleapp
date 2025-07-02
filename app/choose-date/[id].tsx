@@ -62,7 +62,7 @@ export default function ChooseDateScreen() {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => router.back()}
@@ -78,7 +78,7 @@ export default function ChooseDateScreen() {
           <View style={styles.placeholder} />
         </View>
 
-        {/* Doctor Info */}
+        {}
         <View style={styles.doctorCard}>
           <Image
             source={{ uri: appointment.doctor.avatar }}
@@ -92,10 +92,10 @@ export default function ChooseDateScreen() {
           </View>
         </View>
 
-        {/* Date Selection */}
+        {}
         <View style={styles.dateSection}>
           <Text style={styles.sectionTitle}>Pick Appointment Date</Text>
-          {/* --- Calendar Picker --- */}
+          {}
           <Calendar
             onDayPress={handleDateSelect}
             markedDates={
@@ -120,7 +120,7 @@ export default function ChooseDateScreen() {
           />
         </View>
 
-        {/* Confirm Button */}
+        {}
         <View style={styles.buttonContainer}>
           <Button
             title="Confirm Date"

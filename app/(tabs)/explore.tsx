@@ -54,8 +54,7 @@ const MenuItem: React.FC<MenuItemProps> = ({
 
 export default function ProfileScreen() {
   const handleMenuPress = (item: string) => {
-    if (item === "My Appointments") {
-      // Navigate to the first appointment details
+    if (item === "My Appointments") {
       router.push(`/appointment/${MOCK_APPOINTMENTS[0].id}`);
     } else {
       Alert.alert("Coming Soon", `${item} feature will be available soon!`);
@@ -72,12 +71,12 @@ export default function ProfileScreen() {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Profile</Text>
         </View>
 
-        {/* Profile Section */}
+        {}
         <View style={styles.profileSection}>
           <View style={styles.avatarContainer}>
             <Image source={{ uri: MOCK_USER.avatar }} style={styles.avatar} />
@@ -86,7 +85,7 @@ export default function ProfileScreen() {
           <Text style={styles.userPhone}>+91782-49347</Text>
         </View>
 
-        {/* Profile Completion */}
+        {}
         <TouchableOpacity style={styles.completionCard}>
           <View style={styles.completionContent}>
             <MaterialIcons name="person" size={20} color={COLORS.primary} />
@@ -101,7 +100,7 @@ export default function ProfileScreen() {
           />
         </TouchableOpacity>
 
-        {/* Menu Section */}
+        {}
         <View style={styles.menuSection}>
           <Text style={styles.sectionTitle}>Ordering</Text>
           <View style={styles.menuContainer}>

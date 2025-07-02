@@ -1,4 +1,4 @@
-// Core Types for the Application
+
 export interface Doctor {
   id: string
   name: string
@@ -18,8 +18,7 @@ export interface Appointment {
   canJoin?: boolean
   countdown?: string
   duration?: number
-  notes?: string
-  // Add concern property to match usage in edit-concern and overview screens
+  notes?: string
   concern?: {
     type: string
     severity: string
@@ -60,9 +59,7 @@ export interface Prescription {
   dosage: string
   frequency: string
   duration: string
-}
-
-// Expo Router doesn't need these navigation types, but keeping for reference
+}
 export type RootStackParamList = {
   Home: undefined
   Profile: undefined

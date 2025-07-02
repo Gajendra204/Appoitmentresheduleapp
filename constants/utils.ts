@@ -1,6 +1,4 @@
-/**
- * Format date string to a more readable format
- */
+
 export const formatDate = (dateString: string): string => {
   try {
     const date = new Date(dateString)
@@ -15,9 +13,7 @@ export const formatDate = (dateString: string): string => {
   }
 }
 
-/**
- * Format time string to 12-hour format
- */
+
 export const formatTime = (timeString: string): string => {
   try {
     const [hours, minutes] = timeString.split(":")
@@ -30,9 +26,7 @@ export const formatTime = (timeString: string): string => {
   }
 }
 
-/**
- * Get time remaining until appointment
- */
+
 export const getTimeUntilAppointment = (date: string, time: string): string => {
   try {
     const appointmentDateTime = new Date(`${date} ${time}`)
@@ -61,32 +55,24 @@ export const getTimeUntilAppointment = (date: string, time: string): string => {
   }
 }
 
-/**
- * Validate phone number format
- */
+
 export const isValidPhoneNumber = (phone: string): boolean => {
   const phoneRegex = /^\+?[\d\s\-$$$$]{10,}$/
   return phoneRegex.test(phone)
 }
 
-/**
- * Validate email format
- */
+
 export const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return emailRegex.test(email)
 }
 
-/**
- * Generate a random ID
- */
+
 export const generateId = (): string => {
   return Math.random().toString(36).substr(2, 9)
 }
 
-/**
- * Capitalize first letter of each word
- */
+
 export const capitalizeWords = (str: string): string => {
   return str.replace(/\b\w/g, (char) => char.toUpperCase())
 }

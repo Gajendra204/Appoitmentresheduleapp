@@ -67,7 +67,7 @@ export const AppointmentDetailsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Doctor Info */}
+        {}
         <View style={styles.doctorCard}>
           <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
           <View style={styles.doctorInfo}>
@@ -81,7 +81,7 @@ export const AppointmentDetailsScreen = () => {
           </View>
         </View>
 
-        {/* Appointment Details */}
+        {}
         <Section title="Appointment Details">
           <DetailRow label="Date" value={`Tuesday, ${appointment.date}`} icon="calendar-today" />
           <DetailRow label="Time" value={appointment.time} icon="access-time" />
@@ -90,7 +90,7 @@ export const AppointmentDetailsScreen = () => {
           <DetailRow label="Status" value="Upcoming" icon="schedule" />
         </Section>
 
-        {/* Symptoms Details */}
+        {}
         <Section title="Symptoms Details">
           <View style={styles.symptomItem}>
             <Text style={styles.symptomText}>• Headache and dizziness</Text>
@@ -103,14 +103,14 @@ export const AppointmentDetailsScreen = () => {
           </View>
         </Section>
 
-        {/* Booking Details */}
+        {}
         <Section title="Booking Details">
           <DetailRow label="Booking ID" value="#APT001" />
           <DetailRow label="Booked on" value="10/09/2023" />
           <DetailRow label="Payment" value="Completed" />
         </Section>
 
-        {/* Medical Report */}
+        {}
         <Section title="Medical Report">
           <TouchableOpacity style={styles.reportItem}>
             <MaterialIcons name="description" size={24} color={COLORS.primary} />
@@ -119,7 +119,7 @@ export const AppointmentDetailsScreen = () => {
           </TouchableOpacity>
         </Section>
 
-        {/* Action Buttons */}
+        {}
         <View style={styles.actionButtons}>
           {appointment.canJoin ? (
             <Button title="Join Call" onPress={handleJoinCall} style={styles.joinButton} />

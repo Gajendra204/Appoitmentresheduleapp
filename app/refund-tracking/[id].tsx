@@ -29,9 +29,7 @@ const RefundStep: React.FC<RefundStepProps> = ({ title, subtitle, isCompleted, i
 
 export default function RefundTrackingScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
-  const [refundCompleted, setRefundCompleted] = React.useState(false)
-
-  // Simulate refund completion after 3 seconds for demo
+  const [refundCompleted, setRefundCompleted] = React.useState(false)
   React.useEffect(() => {
     const timer = setTimeout(() => {
       setRefundCompleted(true)
@@ -42,7 +40,7 @@ export default function RefundTrackingScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
@@ -53,7 +51,7 @@ export default function RefundTrackingScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Refund Details Card */}
+        {}
         <View style={styles.refundCard}>
           <View style={styles.refundRow}>
             <Text style={styles.refundLabel}>Appointment ID</Text>
@@ -73,7 +71,7 @@ export default function RefundTrackingScreen() {
           </View>
         </View>
 
-        {/* Refund Progress Section */}
+        {}
         <View style={styles.progressSection}>
           <Text style={styles.progressTitle}>Track your refund process</Text>
 
