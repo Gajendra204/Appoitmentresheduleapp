@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Calendar } from "react-native-calendars";
 import { Button } from "../../components/Button";
 import { MOCK_APPOINTMENTS } from "../../constants/mockData";
 import {
@@ -22,69 +23,14 @@ import {
 } from "../../constants/theme";
 import { useApp } from "../../contexts/AppContext";
 
-interface DateItemProps {
-  date: number;
-  day: string;
-  month: string;
-  isSelected: boolean;
-  isDisabled?: boolean;
-  onPress: () => void;
-}
-
-const DateItem: React.FC<DateItemProps> = ({
-  date,
-  day,
-  month,
-  isSelected,
-  isDisabled,
-  onPress,
-}) => (
-  <TouchableOpacity
-    style={[
-      styles.dateItem,
-      isSelected && styles.selectedDateItem,
-      isDisabled && styles.disabledDateItem,
-    ]}
-    onPress={onPress}
-    disabled={isDisabled}
-    activeOpacity={0.7}
-  >
-    <Text style={[styles.dateNumber, isSelected && styles.selectedDateText]}>
-      {date.toString().padStart(2, "0")}
-    </Text>
-    <Text style={[styles.dayText, isSelected && styles.selectedDateText]}>
-      {day}
-    </Text>
-    <Text style={[styles.monthText, isSelected && styles.selectedDateText]}>
-      {month}
-    </Text>
-  </TouchableOpacity>
-);
-
 export default function ChooseDateScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const { dispatch } = useApp();
 
-  // Generate calendar dates for February 2025
-  const calendarDates = [
-    { date: 6, day: "Friday", month: "Feb", key: "06-02-2025" },
-    { date: 7, day: "Saturday", month: "Feb", key: "07-02-2025" },
-    { date: 8, day: "Sunday", month: "Feb", key: "08-02-2025" },
-    { date: 9, day: "Monday", month: "Feb", key: "09-02-2025" },
-    { date: 10, day: "Tuesday", month: "Feb", key: "10-02-2025" },
-    { date: 11, day: "Wednesday", month: "Feb", key: "11-02-2025" },
-    { date: 12, day: "Thursday", month: "Feb", key: "12-02-2025" },
-    { date: 13, day: "Friday", month: "Feb", key: "13-02-2025" },
-    { date: 14, day: "Saturday", month: "Feb", key: "14-02-2025" },
-    { date: 15, day: "Sunday", month: "Feb", key: "15-02-2025" },
-    { date: 16, day: "Monday", month: "Feb", key: "16-02-2025" },
-    { date: 17, day: "Tuesday", month: "Feb", key: "17-02-2025" },
-  ];
-
-  const handleDateSelect = (dateKey: string) => {
-    setSelectedDate(dateKey);
+  const handleDateSelect = (day: { dateString: string }) => {
+    setSelectedDate(day.dateString);
   };
 
   const handleConfirmDate = () => {
@@ -149,28 +95,29 @@ export default function ChooseDateScreen() {
         {/* Date Selection */}
         <View style={styles.dateSection}>
           <Text style={styles.sectionTitle}>Pick Appointment Date</Text>
-          <View style={styles.calendarGrid}>
-            {calendarDates.map((dateItem) => (
-              <DateItem
-                key={dateItem.key}
-                date={dateItem.date}
-                day={dateItem.day}
-                month={dateItem.month}
-                isSelected={selectedDate === dateItem.key}
-                onPress={() => handleDateSelect(dateItem.key)}
-              />
-            ))}
-          </View>
-        </View>
-
-        {/* Month Indicator */}
-        <View style={styles.monthIndicator}>
-          <MaterialIcons
-            name="calendar-today"
-            size={16}
-            color={COLORS.text.secondary}
+          {/* --- Calendar Picker --- */}
+          <Calendar
+            onDayPress={handleDateSelect}
+            markedDates={
+              selectedDate
+                ? {
+                    [selectedDate]: {
+                      selected: true,
+                      selectedColor: COLORS.primary,
+                    },
+                  }
+                : {}
+            }
+            minDate={new Date().toISOString().split("T")[0]}
+            theme={{
+              selectedDayBackgroundColor: COLORS.primary,
+              todayTextColor: COLORS.primary,
+              arrowColor: COLORS.primary,
+              textSectionTitleColor: COLORS.text.primary,
+              dayTextColor: COLORS.text.primary,
+              monthTextColor: COLORS.text.primary,
+            }}
           />
-          <Text style={styles.monthText}>06 February 2025</Text>
         </View>
 
         {/* Confirm Button */}
@@ -246,53 +193,6 @@ const styles = StyleSheet.create({
     ...TYPOGRAPHY.h3,
     color: COLORS.text.primary,
     marginBottom: SPACING.md,
-  },
-  calendarGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    gap: SPACING.sm,
-  },
-  dateItem: {
-    backgroundColor: COLORS.surface,
-    width: "30%",
-    aspectRatio: 1,
-    borderRadius: BORDER_RADIUS.md,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: SPACING.sm,
-    ...SHADOWS.small,
-  },
-  selectedDateItem: {
-    backgroundColor: COLORS.primary,
-  },
-  disabledDateItem: {
-    backgroundColor: COLORS.background,
-    opacity: 0.5,
-  },
-  dateNumber: {
-    ...TYPOGRAPHY.h3,
-    color: COLORS.text.primary,
-    marginBottom: 2,
-  },
-  dayText: {
-    ...TYPOGRAPHY.caption,
-    color: COLORS.text.secondary,
-    marginBottom: 1,
-  },
-  monthText: {
-    ...TYPOGRAPHY.caption,
-    color: COLORS.text.secondary,
-  },
-  selectedDateText: {
-    color: COLORS.surface,
-  },
-  monthIndicator: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: SPACING.md,
-    gap: SPACING.xs,
   },
   buttonContainer: {
     padding: SPACING.md,

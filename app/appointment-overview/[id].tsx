@@ -78,8 +78,8 @@ export default function AppointmentOverviewScreen() {
     date: string;
     time: string;
   }>();
-  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id);
   const { state } = useApp();
+  const appointment = state.appointments.find((apt) => apt.id === id);
   const user = state.user;
 
   const handleEditDateTime = () => {
