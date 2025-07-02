@@ -10,7 +10,6 @@ import {
   View,
 } from "react-native";
 import { Button } from "../../components/Button";
-import { MOCK_APPOINTMENTS } from "../../constants/mockData";
 import {
   BORDER_RADIUS,
   COLORS,

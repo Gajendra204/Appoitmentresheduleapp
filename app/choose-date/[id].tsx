@@ -85,7 +85,7 @@ export default function ChooseDateScreen() {
             style={styles.doctorAvatar}
           />
           <View style={styles.doctorInfo}>
-            <Text style={styles.doctorName}>Dr. Prerna</Text>
+            <Text style={styles.doctorName}>{appointment.doctor.name}</Text>
             <Text style={styles.doctorSpecialization}>
               Male-Female Infertility
             </Text>
