@@ -118,7 +118,7 @@ const AppointmentDetailsScreen: React.FC = () => {
             </View>
             {isCancelled && (
               <View style={styles.cancelledInfo}>
-                <Text style={styles.cancelledText}>This appointment has been cancelled by doctor.</Text>
+                <Text style={styles.cancelledText}>This appointment has been cancelled.</Text>
                 <TouchableOpacity onPress={handleTrackRefund}>
                   <Text style={styles.trackRefundText}>Track refund</Text>
                 </TouchableOpacity>

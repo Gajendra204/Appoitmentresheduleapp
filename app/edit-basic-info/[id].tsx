@@ -105,7 +105,6 @@ export default function EditBasicInfoScreen() {
 
   const handleConfirm = () => {
     if (!appointment) return;
-    // Update the user info in global user state
     dispatch({
       type: "UPDATE_USER",
       payload: {
@@ -322,4 +321,3 @@ const styles = StyleSheet.create({
     marginTop: SPACING.xl,
   },
 });
-    

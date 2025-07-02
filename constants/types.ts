@@ -28,7 +28,7 @@ export interface Appointment {
   }
 }
 
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons"
 
 export interface RescheduleReason {
   id: string
