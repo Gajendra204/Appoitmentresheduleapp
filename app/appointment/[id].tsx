@@ -1,36 +1,71 @@
-import type React from "react"
-import { useState, useEffect } from "react"
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Image, Modal } from "react-native"
-import { useLocalSearchParams, router } from "expo-router"
-import { MaterialIcons } from "@expo/vector-icons"
-import { MOCK_APPOINTMENTS } from "../../constants/mockData"
-import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../../constants/theme"
+import { MaterialIcons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import type React from "react";
+import { useEffect, useState } from "react";
+import {
+  Image,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { MOCK_APPOINTMENTS } from "../../constants/mockData";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  SHADOWS,
+  SPACING,
+  TYPOGRAPHY,
+} from "../../constants/theme";
 
 interface MenuItemProps {
-  title: string
-  onPress: () => void
-  showArrow?: boolean
+  title: string;
+  onPress: () => void;
+  showArrow?: boolean;
 }
 
-const MenuItem: React.FC<MenuItemProps> = ({ title, onPress, showArrow = true }) => (
-  <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.7}>
+const MenuItem: React.FC<MenuItemProps> = ({
+  title,
+  onPress,
+  showArrow = true,
+}) => (
+  <TouchableOpacity
+    style={styles.menuItem}
+    onPress={onPress}
+    activeOpacity={0.7}
+  >
     <Text style={styles.menuItemText}>{title}</Text>
-    {showArrow && <MaterialIcons name="chevron-right" size={20} color={COLORS.text.disabled} />}
+    {showArrow && (
+      <MaterialIcons
+        name="chevron-right"
+        size={20}
+        color={COLORS.text.disabled}
+      />
+    )}
   </TouchableOpacity>
-)
+);
 
 interface CancelDialogProps {
-  visible: boolean
-  onCancel: () => void
-  onConfirm: () => void
+  visible: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
 }
 
-const CancelDialog: React.FC<CancelDialogProps> = ({ visible, onCancel, onConfirm }) => (
+const CancelDialog: React.FC<CancelDialogProps> = ({
+  visible,
+  onCancel,
+  onConfirm,
+}) => (
   <Modal visible={visible} transparent animationType="fade">
     <View style={styles.modalOverlay}>
       <View style={styles.cancelDialog}>
         <Text style={styles.dialogTitle}>Cancel Appointment</Text>
-        <Text style={styles.dialogMessage}>Are you sure you want to cancel your appointment?</Text>
+        <Text style={styles.dialogMessage}>
+          Are you sure you want to cancel your appointment?
+        </Text>
 
         <View style={styles.dialogButtons}>
           <TouchableOpacity style={styles.cancelButton} onPress={onConfirm}>
@@ -43,48 +78,95 @@ const CancelDialog: React.FC<CancelDialogProps> = ({ visible, onCancel, onConfir
       </View>
     </View>
   </Modal>
-)
+);
+
+interface DetailRowProps {
+  label: string;
+  value: string;
+}
+
+const DetailRow: React.FC<DetailRowProps> = ({ label, value }) => (
+  <View style={styles.detailRow}>
+    <Text style={styles.detailLabel}>{label}</Text>
+    <Text style={styles.detailValue}>{value}</Text>
+  </View>
+);
+
+interface ExpandableSectionProps {
+  title: string;
+  isExpanded: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}
+
+const ExpandableSection: React.FC<ExpandableSectionProps> = ({
+  title,
+  isExpanded,
+  onToggle,
+  children,
+}) => (
+  <View style={styles.expandableSection}>
+    <TouchableOpacity style={styles.sectionHeader} onPress={onToggle}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <MaterialIcons
+        name={isExpanded ? "keyboard-arrow-up" : "keyboard-arrow-down"}
+        size={24}
+        color={COLORS.text.secondary}
+      />
+    </TouchableOpacity>
+    {isExpanded && children}
+  </View>
+);
+
 
 const AppointmentDetailsScreen: React.FC = () => {
-  const { id, cancelled } = useLocalSearchParams<{ id: string; cancelled?: string }>()
-  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id)
-  const [showCancelDialog, setShowCancelDialog] = useState(false)
-  const [isCancelled, setIsCancelled] = useState(false)
+  const { id, cancelled } = useLocalSearchParams<{
+    id: string;
+    cancelled?: string;
+  }>();
+  const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [isCancelled, setIsCancelled] = useState(false);
+    const [areDetailsExpanded, setAreDetailsExpanded] = useState(false);
 
   useEffect(() => {
     if (cancelled === "true") {
-      setIsCancelled(true)
+      setIsCancelled(true);
     }
-  }, [cancelled])
+  }, [cancelled]);
+
+  const toggleDetails = () => {
+    setAreDetailsExpanded(!areDetailsExpanded);
+  };
 
   const handleReschedule = () => {
-    router.push(`/reschedule/${appointment?.id}`)
-  }
+    router.push(`/reschedule/${appointment?.id}`);
+  };
 
   const handleCancelPress = () => {
-    setShowCancelDialog(true)
-  }
+    setShowCancelDialog(true);
+  };
 
   const handleCancelConfirm = () => {
-    setShowCancelDialog(false)
-    router.push(`/cancel-reason/${appointment?.id}`)
-  }
+    setShowCancelDialog(false);
+    router.push(`/cancel-reason/${appointment?.id}`);
+  };
 
   const handleCancelDialogClose = () => {
-    setShowCancelDialog(false)
-  }
+    setShowCancelDialog(false);
+  };
 
   const handleTrackRefund = () => {
-    router.push(`/refund-tracking/${appointment?.id}`)
-  }
+    router.push(`/refund-tracking/${appointment?.id}`);
+  };
 
   const handleMenuPress = (item: string) => {
     if (item === "Appointment Details") {
-      router.push(`/appointment-detail-view/${appointment?.id}` as any)
+      router.push(`/appointment-detail-view/${appointment?.id}` as any);
     } else {
-      console.log(`${item} pressed`)
+      console.log(`${item} pressed`);
     }
-  }
+  };
 
   if (!appointment) {
     return (
@@ -93,32 +175,38 @@ const AppointmentDetailsScreen: React.FC = () => {
           <Text style={styles.errorText}>Appointment not found</Text>
         </View>
       </SafeAreaView>
-    )
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <MaterialIcons name="arrow-back" size={24} color={COLORS.text.primary} />
-          </TouchableOpacity>
           <Text style={styles.headerTitle}>Appointment Details</Text>
           <View style={styles.placeholder} />
         </View>
 
         {}
         <View style={styles.doctorCard}>
-          <Image source={{ uri: appointment.doctor.avatar }} style={styles.doctorAvatar} />
+          <Text style={{ color: 'black' }}>I am rendering</Text>
+          <Image
+            source={require("../../assets/images/doctor.png")}
+            style={styles.doctorAvatar}
+          />
           <View style={styles.doctorInfo}>
             <View style={styles.doctorNameRow}>
               <Text style={styles.doctorLabel}>Doctor name</Text>
-              <Text style={styles.doctorName}>Dr. Deepa Godara</Text>
+              <Text style={styles.doctorName}>{appointment.doctor.name}</Text>
             </View>
             {isCancelled && (
               <View style={styles.cancelledInfo}>
-                <Text style={styles.cancelledText}>This appointment has been cancelled.</Text>
+                <Text style={styles.cancelledText}>
+                  This appointment has been cancelled.
+                </Text>
                 <TouchableOpacity onPress={handleTrackRefund}>
                   <Text style={styles.trackRefundText}>Track refund</Text>
                 </TouchableOpacity>
@@ -127,34 +215,82 @@ const AppointmentDetailsScreen: React.FC = () => {
           </View>
         </View>
 
+
+        <ExpandableSection
+          title="Appointment Details"
+          isExpanded={areDetailsExpanded}
+          onToggle={toggleDetails}
+        >
+          <View style={styles.detailsContainer}>
+            <DetailRow label="Appointment ID" value="APPL#10247816" />
+            <DetailRow label="Appointment Type" value="Freemedia" />
+            <DetailRow label="Appointment fee" value="0 INR" />
+            <DetailRow label="Duration" value="1 min" />
+            <DetailRow
+              label="Appointment date"
+              value={appointment.date || "N/A"}
+            />
+            <DetailRow
+              label="Appointment time"
+              value={appointment.time || "N/A"}
+            />
+            <DetailRow label="Booking Status" value="Completed" />
+            <DetailRow label="Routine Status" value="Not assigned" />
+            <DetailRow label="Expert" value={appointment.doctor.name} />
+          </View>
+        </ExpandableSection>
+
         <View style={styles.menuContainer}>
-          <MenuItem title="Appointment Details" onPress={() => handleMenuPress("Appointment Details")} />
-          <MenuItem title="Symptoms Details" onPress={() => handleMenuPress("Symptoms Details")} />
-          <MenuItem title="Coupons Details" onPress={() => handleMenuPress("Coupons Details")} />
-          <MenuItem title="Booking Details" onPress={() => handleMenuPress("Booking Details")} />
-          <MenuItem title="medical Report" onPress={() => handleMenuPress("medical Report")} />
+          <MenuItem
+            title="Symptoms Details"
+            onPress={() => console.log("Symptoms Details pressed")}
+          />
+          <MenuItem
+            title="Coupons Details"
+            onPress={() => console.log("Coupons Details pressed")}
+          />
+          <MenuItem
+            title="Booking Details"
+            onPress={() => console.log("Booking Details pressed")}
+          />
+          <MenuItem
+            title="Medical Report"
+            onPress={() => console.log("Medical Report pressed")}
+          />
         </View>
 
         {!isCancelled && (
           <View style={styles.actionButtons}>
-            <TouchableOpacity style={styles.rescheduleButton} onPress={handleReschedule}>
+            <TouchableOpacity
+              style={styles.rescheduleButton}
+              onPress={handleReschedule}
+            >
               <Text style={styles.rescheduleText}>Reschedule Appointment</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelAppointmentButton} onPress={handleCancelPress}>
-              <Text style={styles.cancelAppointmentText}>Cancel Appointment</Text>
+            <TouchableOpacity
+              style={styles.cancelAppointmentButton}
+              onPress={handleCancelPress}
+            >
+              <Text style={styles.cancelAppointmentText}>
+                Cancel Appointment
+              </Text>
             </TouchableOpacity>
           </View>
         )}
       </ScrollView>
 
-      {}
-      <CancelDialog visible={showCancelDialog} onCancel={handleCancelDialogClose} onConfirm={handleCancelConfirm} />
+      <CancelDialog
+        visible={showCancelDialog}
+        onCancel={handleCancelDialogClose}
+        onConfirm={handleCancelConfirm}
+      />
     </SafeAreaView>
-  )
-}
+  );
+};
+
 
 export default function AppointmentDetails() {
-  return <AppointmentDetailsScreen />
+  return <AppointmentDetailsScreen />;
 }
 
 const styles = StyleSheet.create({
@@ -198,23 +334,24 @@ const styles = StyleSheet.create({
     margin: SPACING.md,
     padding: SPACING.lg,
     borderRadius: BORDER_RADIUS.lg,
-    flexDirection: "row",
-    alignItems: "flex-start",
+    flexDirection: "column",
+    alignItems: "center",
     ...SHADOWS.medium,
   },
   doctorAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     marginRight: SPACING.md,
   },
   doctorInfo: {
-    flex: 1,
+    alignSelf: "stretch",
+    alignItems: "flex-start",
   },
   doctorNameRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: SPACING.sm,
+    marginTop: SPACING.md,
   },
   doctorLabel: {
     ...TYPOGRAPHY.body2,
@@ -244,6 +381,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     marginHorizontal: SPACING.md,
     borderRadius: BORDER_RADIUS.lg,
+    borderWidth:1,
+    borderColor: COLORS.divider,
     ...SHADOWS.small,
   },
   menuItem: {
@@ -251,7 +390,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.lg,
+    paddingVertical: SPACING.md,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.divider,
   },
@@ -339,4 +478,56 @@ const styles = StyleSheet.create({
     color: COLORS.surface,
     fontWeight: "600",
   },
-})
+
+   expandableSection: {
+    backgroundColor: COLORS.surface,
+    marginHorizontal: SPACING.md,
+    // marginBottom: SPACING.xs,
+    borderRadius: BORDER_RADIUS.lg,
+    borderWidth:1,
+     borderColor: COLORS.divider,
+    ...SHADOWS.small,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: SPACING.md,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.divider,
+  },
+  sectionTitle: {
+    ...TYPOGRAPHY.body1,
+    color: COLORS.text.primary,
+    fontWeight: "500",
+  },
+  detailsContainer: {
+    padding: SPACING.md,
+  },
+  detailRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: SPACING.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.divider,
+  },
+  detailLabel: {
+    ...TYPOGRAPHY.body2,
+    color: COLORS.text.secondary,
+    flex: 1,
+  },
+  detailValue: {
+    ...TYPOGRAPHY.body2,
+    color: COLORS.text.primary,
+    fontWeight: "500",
+    textAlign: "right",
+    flex: 1,
+  },
+  comingSoonText: {
+    ...TYPOGRAPHY.body2,
+    color: COLORS.text.secondary,
+    textAlign: "center",
+    paddingVertical: SPACING.md,
+  },
+});

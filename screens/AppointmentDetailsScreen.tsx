@@ -43,7 +43,7 @@ export const AppointmentDetailsScreen = () => {
       <SafeAreaView style={styles.container}>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Appointment not found</Text>
-          <Button title="Go Back" onPress={() => router.back()} />
+          {/* <Button title="Go Back" onPress={() => router.back()} /> */}
         </View>
       </SafeAreaView>
     )
