@@ -26,7 +26,7 @@ export default function RootLayout() {
               },
             }}
           >
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: true }} />
             <Stack.Screen
               name="appointment/[id]"
               options={{
@@ -34,13 +34,7 @@ export default function RootLayout() {
                 presentation: "card",
               }}
             />
-            <Stack.Screen
-              name="appointment-detail-view/[id]"
-              options={{
-                title: "Appointment Details",
-                presentation: "card",
-              }}
-            />
+
             <Stack.Screen
               name="reschedule/[id]"
               options={{

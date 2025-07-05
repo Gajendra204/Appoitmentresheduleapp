@@ -81,13 +81,13 @@ export default function ChooseDateScreen() {
         {}
         <View style={styles.doctorCard}>
           <Image
-            source={{ uri: appointment.doctor.avatar }}
+           source={require("../../assets/images/doctor.png")}
             style={styles.doctorAvatar}
           />
           <View style={styles.doctorInfo}>
             <Text style={styles.doctorName}>{appointment.doctor.name}</Text>
             <Text style={styles.doctorSpecialization}>
-              Male-Female Infertility
+              {appointment.doctor.specialization}
             </Text>
           </View>
         </View>
