@@ -1,64 +1,108 @@
-import type React from "react"
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Image, Alert } from "react-native"
-import { MaterialIcons } from "@expo/vector-icons"
-import { router } from "expo-router"
-import { MOCK_USER } from "../constants/mockData"
-import { COLORS, TYPOGRAPHY, SPACING, BORDER_RADIUS, SHADOWS } from "../constants/theme"
+import { MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import type React from "react";
+import {
+  Alert,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { MOCK_USER } from "../constants/mockData";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  SHADOWS,
+  SPACING,
+  TYPOGRAPHY,
+} from "../constants/theme";
 
 interface MenuItemProps {
-  icon: keyof typeof MaterialIcons.glyphMap
-  title: string
-  onPress: () => void
-  showArrow?: boolean
+  icon: keyof typeof MaterialIcons.glyphMap;
+  title: string;
+  onPress: () => void;
+  showArrow?: boolean;
 }
 
-const MenuItem: React.FC<MenuItemProps> = ({ icon, title, onPress, showArrow = true }) => (
-  <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.7}>
+const MenuItem: React.FC<MenuItemProps> = ({
+  icon,
+  title,
+  onPress,
+  showArrow = true,
+}) => (
+  <TouchableOpacity
+    style={styles.menuItem}
+    onPress={onPress}
+    activeOpacity={0.7}
+  >
     <View style={styles.menuItemLeft}>
       <MaterialIcons name={icon} size={24} color={COLORS.text.secondary} />
       <Text style={styles.menuItemText}>{title}</Text>
     </View>
-    {showArrow && <MaterialIcons name="chevron-right" size={24} color={COLORS.text.disabled} />}
+    {showArrow && (
+      <MaterialIcons
+        name="chevron-right"
+        size={24}
+        color={COLORS.text.disabled}
+      />
+    )}
   </TouchableOpacity>
-)
+);
 
 export const ProfileScreen = () => {
   const handleMenuPress = (item: string) => {
     if (item === "My Appointments") {
-      router.push("/(tabs)")
+      router.push("/(tabs)");
     } else {
-      Alert.alert("Coming Soon", `${item} feature will be available soon!`)
+      Alert.alert("Coming Soon", `${item} feature will be available soon!`);
     }
-  }
+  };
 
   const handleEditProfile = () => {
-    Alert.alert("Edit Profile", "Profile editing feature coming soon!")
-  }
+    Alert.alert("Edit Profile", "Profile editing feature coming soon!");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {}
         <View style={styles.profileHeader}>
-          <View style={styles.avatarContainer}>
-            <Image source={{ uri: MOCK_USER.avatar }} style={styles.avatar} />
-            <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
-              <MaterialIcons name="edit" size={16} color={COLORS.surface} />
-            </TouchableOpacity>
-          </View>
+          <View style={{ height: 200, width: 200, backgroundColor: "lightgray" }}>
+  <Image
+    source={{ uri: "https://reactnative.dev/img/tiny_logo.png" }}
+    style={{ width: 80, height: 80, backgroundColor: "red" }}
+  />
+</View>
+
           <Text style={styles.userName}>{MOCK_USER.name}</Text>
           <Text style={styles.userPhone}>{MOCK_USER.phone}</Text>
         </View>
 
-        {}
         <View style={styles.completionCard}>
           <View style={styles.completionHeader}>
             <MaterialIcons name="person" size={20} color={COLORS.primary} />
-            <Text style={styles.completionTitle}>Your Profile is {MOCK_USER.profileCompletion}% complete</Text>
-            <MaterialIcons name="chevron-right" size={20} color={COLORS.text.disabled} />
+            <Text style={styles.completionTitle}>
+              Your Profile is {MOCK_USER.profileCompletion}% complete
+            </Text>
+            <MaterialIcons
+              name="chevron-right"
+              size={20}
+              color={COLORS.text.disabled}
+            />
           </View>
           <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: `${MOCK_USER.profileCompletion}%` }]} />
+            <View
+              style={[
+                styles.progressFill,
+                { width: `${MOCK_USER.profileCompletion}%` },
+              ]}
+            />
           </View>
         </View>
 
@@ -66,9 +110,21 @@ export const ProfileScreen = () => {
         <View style={styles.menuSection}>
           <Text style={styles.sectionTitle}>Ordering</Text>
           <View style={styles.menuContainer}>
-            <MenuItem icon="store" title="Store" onPress={() => handleMenuPress("Store")} />
-            <MenuItem icon="shopping-cart" title="Cart" onPress={() => handleMenuPress("Cart")} />
-            <MenuItem icon="history" title="Order History" onPress={() => handleMenuPress("Order History")} />
+            <MenuItem
+              icon="store"
+              title="Store"
+              onPress={() => handleMenuPress("Store")}
+            />
+            <MenuItem
+              icon="shopping-cart"
+              title="Cart"
+              onPress={() => handleMenuPress("Cart")}
+            />
+            <MenuItem
+              icon="history"
+              title="Order History"
+              onPress={() => handleMenuPress("Order History")}
+            />
             <MenuItem
               icon="calendar-today"
               title="My Appointments"
@@ -76,21 +132,10 @@ export const ProfileScreen = () => {
             />
           </View>
         </View>
-
-        {}
-        <View style={styles.menuSection}>
-          <Text style={styles.sectionTitle}>Account</Text>
-          <View style={styles.menuContainer}>
-            <MenuItem icon="settings" title="Settings" onPress={() => handleMenuPress("Settings")} />
-            <MenuItem icon="help" title="Help & Support" onPress={() => handleMenuPress("Help & Support")} />
-            <MenuItem icon="info" title="About" onPress={() => handleMenuPress("About")} />
-            <MenuItem icon="logout" title="Logout" onPress={() => handleMenuPress("Logout")} showArrow={false} />
-          </View>
-        </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -201,4 +246,4 @@ const styles = StyleSheet.create({
     color: COLORS.text.primary,
     marginLeft: SPACING.md,
   },
-})
+});
