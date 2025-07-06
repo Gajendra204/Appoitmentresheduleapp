@@ -118,7 +118,6 @@ const ExpandableSection: React.FC<ExpandableSectionProps> = ({
   </View>
 );
 
-
 const AppointmentDetailsScreen: React.FC = () => {
   const { id, cancelled } = useLocalSearchParams<{
     id: string;
@@ -127,7 +126,8 @@ const AppointmentDetailsScreen: React.FC = () => {
   const appointment = MOCK_APPOINTMENTS.find((apt) => apt.id === id);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [isCancelled, setIsCancelled] = useState(false);
-    const [areDetailsExpanded, setAreDetailsExpanded] = useState(false);
+  const [areDetailsExpanded, setAreDetailsExpanded] = useState(false);
+  const [showActionMenu, setShowActionMenu] = useState(false);
 
   useEffect(() => {
     if (cancelled === "true") {
@@ -137,6 +137,10 @@ const AppointmentDetailsScreen: React.FC = () => {
 
   const toggleDetails = () => {
     setAreDetailsExpanded(!areDetailsExpanded);
+  };
+
+  const toggleActionMenu = () => {
+    setShowActionMenu(!showActionMenu);
   };
 
   const handleReschedule = () => {
@@ -187,12 +191,57 @@ const AppointmentDetailsScreen: React.FC = () => {
         {}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Appointment Details</Text>
-          <View style={styles.placeholder} />
+          {!isCancelled && (
+            <TouchableOpacity onPress={toggleActionMenu}>
+              <MaterialIcons
+                name="more-vert"
+                size={24}
+                color={COLORS.text.primary}
+              />
+            </TouchableOpacity>
+          )}
         </View>
+
+        {showActionMenu && (
+          <View style={styles.actionMenu}>
+            <TouchableOpacity
+              style={styles.menuItemButton}
+              onPress={handleReschedule}
+            >
+              <MaterialIcons
+                name="schedule"
+                size={20}
+                color={COLORS.primary}
+                style={styles.menuItemIcon}
+              />
+              <Text style={styles.menuItemButtonText}>
+                Reschedule Appointment
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.menuItemButton}
+              onPress={handleCancelPress}
+            >
+              <MaterialIcons
+                name="close"
+                size={20}
+                color={COLORS.status.error}
+                style={styles.menuItemIcon}
+              />
+              <Text
+                style={[
+                  styles.menuItemButtonText,
+                  { color: COLORS.status.error },
+                ]}
+              >
+                Cancel Appointment
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {}
         <View style={styles.doctorCard}>
-          <Text style={{ color: 'black' }}>I am rendering</Text>
           <Image
             source={require("../../assets/images/doctor.png")}
             style={styles.doctorAvatar}
@@ -214,7 +263,6 @@ const AppointmentDetailsScreen: React.FC = () => {
             )}
           </View>
         </View>
-
 
         <ExpandableSection
           title="Appointment Details"
@@ -258,25 +306,6 @@ const AppointmentDetailsScreen: React.FC = () => {
             onPress={() => console.log("Medical Report pressed")}
           />
         </View>
-
-        {!isCancelled && (
-          <View style={styles.actionButtons}>
-            <TouchableOpacity
-              style={styles.rescheduleButton}
-              onPress={handleReschedule}
-            >
-              <Text style={styles.rescheduleText}>Reschedule Appointment</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cancelAppointmentButton}
-              onPress={handleCancelPress}
-            >
-              <Text style={styles.cancelAppointmentText}>
-                Cancel Appointment
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </ScrollView>
 
       <CancelDialog
@@ -287,7 +316,6 @@ const AppointmentDetailsScreen: React.FC = () => {
     </SafeAreaView>
   );
 };
-
 
 export default function AppointmentDetails() {
   return <AppointmentDetailsScreen />;
@@ -381,7 +409,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     marginHorizontal: SPACING.md,
     borderRadius: BORDER_RADIUS.lg,
-    borderWidth:1,
+    borderWidth: 1,
     borderColor: COLORS.divider,
     ...SHADOWS.small,
   },
@@ -398,33 +426,36 @@ const styles = StyleSheet.create({
     ...TYPOGRAPHY.body1,
     color: COLORS.text.primary,
   },
-  actionButtons: {
-    padding: SPACING.md,
-    paddingTop: SPACING.xl,
-    gap: SPACING.md,
-  },
-  rescheduleButton: {
-    backgroundColor: COLORS.primary,
+
+  actionMenu: {
+    backgroundColor: COLORS.surface,
+    marginHorizontal: SPACING.md,
     borderRadius: BORDER_RADIUS.md,
-    paddingVertical: SPACING.md,
+    borderWidth: 1,
+    borderColor: COLORS.divider,
+    ...SHADOWS.small,
+    position: "absolute",
+    right: SPACING.md,
+    top: 60,
+    zIndex: 1,
+    width: 220,
+  },
+  menuItemButton: {
+    flexDirection: "row",
     alignItems: "center",
-  },
-  rescheduleText: {
-    ...TYPOGRAPHY.button,
-    color: COLORS.surface,
-    fontWeight: "600",
-  },
-  cancelAppointmentButton: {
-    backgroundColor: COLORS.status.error,
-    borderRadius: BORDER_RADIUS.md,
     paddingVertical: SPACING.md,
-    alignItems: "center",
+    paddingHorizontal: SPACING.md,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.divider,
   },
-  cancelAppointmentText: {
-    ...TYPOGRAPHY.button,
-    color: COLORS.surface,
-    fontWeight: "600",
+  menuItemIcon: {
+    marginRight: SPACING.sm,
   },
+  menuItemButtonText: {
+    ...TYPOGRAPHY.body2,
+    color: COLORS.text.primary,
+  },
+
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -479,13 +510,13 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-   expandableSection: {
+  expandableSection: {
     backgroundColor: COLORS.surface,
     marginHorizontal: SPACING.md,
     // marginBottom: SPACING.xs,
     borderRadius: BORDER_RADIUS.lg,
-    borderWidth:1,
-     borderColor: COLORS.divider,
+    borderWidth: 1,
+    borderColor: COLORS.divider,
     ...SHADOWS.small,
   },
   sectionHeader: {

@@ -117,17 +117,11 @@ export default function Home() {
 
           <View style={styles.bannerContainer}>
             <Image
-              source={{ uri: "/placeholder.svg?height=150&width=300" }}
+              source={require("../../assets/images/banner.png")}
               style={styles.bannerImage}
               resizeMode="cover"
             />
-            <View style={styles.bannerOverlay}>
-              <Text style={styles.bannerTitle}>Shilajit</Text>
-              <Text style={styles.bannerSubtitle}>REINVENTED</Text>
-              <Text style={styles.bannerDescription}>
-                A wonderful blend for strength, stamina & vitality
-              </Text>
-            </View>
+           
           </View>
 
           {}
@@ -341,7 +335,7 @@ const styles = StyleSheet.create({
   contentArea: {
     flex: 1,
     paddingHorizontal: SPACING.md,
-    marginTop: -20, // Overlap with header
+    marginTop: -20, 
   },
   searchContainer: {
     backgroundColor: COLORS.surface,
@@ -354,7 +348,7 @@ const styles = StyleSheet.create({
     ...SHADOWS.small,
   },
   bannerContainer: {
-    height: 150,
+    height: 178,
     borderRadius: BORDER_RADIUS.lg,
     overflow: "hidden",
     marginBottom: SPACING.lg,
@@ -363,30 +357,9 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#8B4513", // Brown background for Shilajit theme
+    backgroundColor: "#8B4513", 
   },
-  bannerOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    justifyContent: "center",
-    paddingHorizontal: SPACING.lg,
-  },
-  bannerTitle: {
-    color: COLORS.surface,
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  bannerSubtitle: {
-    color: COLORS.surface,
-    fontSize: 24,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
+  
   bannerDescription: {
     color: "rgba(255, 255, 255, 0.9)",
     fontSize: 14,
@@ -448,7 +421,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#FFA500", // Orange color for upcoming
+    backgroundColor: "#FFA500", 
     marginRight: 6,
   },
   statusText: {
